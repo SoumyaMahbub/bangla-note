@@ -1,13 +1,17 @@
-import React from 'react'
+import React from "react";
 import Drawer from "@mui/material/Drawer";
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import FaceIcon from '@mui/icons-material/Face';
-import QuizIcon from '@mui/icons-material/Quiz';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import FaceIcon from "@mui/icons-material/Face";
+import QuizIcon from "@mui/icons-material/Quiz";
+import AddIcon from '@mui/icons-material/Add';
+import Toolbar from "@mui/material/Toolbar";
+import Divider from "@mui/material/Divider";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
-const drawerWidth = 240
+const drawerWidth = 240;
 
 const SideBar = () => {
     return (
@@ -24,23 +28,37 @@ const SideBar = () => {
                 variant="permanent"
                 anchor="left"
             >
+                <Toolbar/>
+                <Divider/>
                 <List>
-					<ListItem button>
-						<ListItemIcon>
-							<FaceIcon/>
-						</ListItemIcon>
-						<ListItemText>Poets</ListItemText>
-					</ListItem>
-					<ListItem button>
-						<ListItemIcon>
-							<QuizIcon/>
-						</ListItemIcon>
-						<ListItemText>Quiz</ListItemText>
-					</ListItem>
+                    <Link to="/poets">
+                        <ListItem button>
+                            <ListItemIcon>
+                                <FaceIcon />
+                            </ListItemIcon>
+                            <ListItemText>Poets</ListItemText>
+                        </ListItem>
+                    </Link>
+                    <Link to="/quiz">
+                        <ListItem button>
+                            <ListItemIcon>
+                                <QuizIcon />
+                            </ListItemIcon>
+                            <ListItemText>Quiz</ListItemText>
+                        </ListItem>
+                    </Link>
+                    <Link to="/add-poet">
+                        <ListItem button>
+                            <ListItemIcon>
+                                <AddIcon />
+                            </ListItemIcon>
+                            <ListItemText>Add</ListItemText>
+                        </ListItem>
+                    </Link>
                 </List>
             </Drawer>
         </div>
-    )
-}
+    );
+};
 
-export default SideBar
+export default SideBar;
