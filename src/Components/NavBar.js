@@ -14,14 +14,14 @@ const NavBar = () => {
             <AppBar position="fixed" sx={{ width: `calc(100% - 240px)`, ml: `240px` }}>
                 <Toolbar>
                     <Switch>
-                        <Route path="/poets">
-                            <Typography variant="h6" component="div">Poets</Typography>
+                        <Route path="/authors">
+                            <Typography variant="h6" component="div">লেখকসমূহ</Typography>
                         </Route>
                         <Route path="/quiz">
-                            <Typography variant="h6" component="div">Quiz</Typography>
+                            <Typography variant="h6" component="div">কুইজ</Typography>
                         </Route>
                         <Route path="/add-poet">
-                            <Typography variant="h6" component="div">Add Poet</Typography>
+                            <Typography variant="h6" component="div">নতুন লেখক</Typography>
                         </Route>
                     </Switch>
                 </Toolbar>

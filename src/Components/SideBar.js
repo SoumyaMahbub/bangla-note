@@ -31,12 +31,12 @@ const SideBar = () => {
                 <Toolbar/>
                 <Divider/>
                 <List>
-                    <Link to="/poets">
+                    <Link to="/authors">
                         <ListItem button>
                             <ListItemIcon>
                                 <FaceIcon />
                             </ListItemIcon>
-                            <ListItemText>Poets</ListItemText>
+                            <ListItemText>লেখকসমূহ</ListItemText>
                         </ListItem>
                     </Link>
                     <Link to="/quiz">
@@ -44,7 +44,7 @@ const SideBar = () => {
                             <ListItemIcon>
                                 <QuizIcon />
                             </ListItemIcon>
-                            <ListItemText>Quiz</ListItemText>
+                            <ListItemText>কুইজ</ListItemText>
                         </ListItem>
                     </Link>
                     <Link to="/add-poet">
@@ -52,7 +52,7 @@ const SideBar = () => {
                             <ListItemIcon>
                                 <AddIcon />
                             </ListItemIcon>
-                            <ListItemText>Add</ListItemText>
+                            <ListItemText>নতুন লেখক</ListItemText>
                         </ListItem>
                     </Link>
                 </List>

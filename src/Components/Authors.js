@@ -2,13 +2,13 @@ import React from 'react'
 import Typography from '@mui/material/Typography'
 import Toolbar from '@mui/material/Toolbar'
 
-const Poets = () => {
+const Authors = () => {
     return (
         <div>
             <Toolbar/>
-            <Typography style={{ fontWeight: 500 }} variant="h3">Poets</Typography>
+            <Typography style={{ fontWeight: 500 }} variant="h3">লেখকসমূহ</Typography>
         </div>
     )
 }
 
-export default Poets
+export default Authors

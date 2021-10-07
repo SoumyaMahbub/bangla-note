@@ -1,11 +1,13 @@
 import "./App.css";
 import Box from '@mui/material/Box';
-import Poets from "./Components/Poets";
+import Authors from "./Components/Authors";
 import Quiz from "./Components/Quiz";
 import SideBar from "./Components/SideBar";
 import NavBar from "./Components/NavBar";
 import CssBaseline from '@mui/material/CssBaseline';
-import PoetForm from './Components/PoetForm'
+import PoetForm from './Components/PoetForm';
+import DateAdapter from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -14,6 +16,7 @@ import {
 
 function App() {
     return (
+		<LocalizationProvider dateAdapter={DateAdapter}>
 		<Router>
 		<div className="App">
 			<CssBaseline />
@@ -22,8 +25,8 @@ function App() {
 				<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
 					<NavBar/>
 					<Switch>
-						<Route path="/poets">
-							<Poets />
+						<Route path="/authors">
+							<Authors />
 						</Route>
 						<Route path="/quiz">
 							<Quiz />
@@ -36,6 +39,7 @@ function App() {
 			</Box>
 		</div>
 		</Router>
+		</LocalizationProvider>
     );
 }
 
