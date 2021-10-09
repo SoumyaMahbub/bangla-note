@@ -15,6 +15,7 @@ import {
 	Switch,
 	Route,
   } from "react-router-dom";
+import McqQuiz from "./Components/McqQuiz";
 
 
 function App() {
@@ -42,6 +43,9 @@ function App() {
 						</Route>
 						<Route path="/quiz">
 							<Quiz />
+						</Route>
+						<Route path="/mcq-quiz">
+							<McqQuiz />
 						</Route>
 						<Route key="add-author" path="/add-author">
 							<AuthorForm />

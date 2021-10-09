@@ -51,7 +51,7 @@ const Author = (props) => {
                 <Stack sx={{textAlign: 'center', width: "25%"}}>
                     <div style={{textAlign: 'left'}}>
                         <Link to="/authors">
-                            <Button variant="outlined" startIcon={<ArrowBackIcon/>}>Back</Button>
+                            <Button variant="outlined" startIcon={<ArrowBackIcon/>}>ফিরে যান</Button>
                         </Link>
                     </div>
                     <h1 style={{marginBottom: "0px"}}>{author['name']}</h1>
@@ -78,9 +78,9 @@ const Author = (props) => {
                 <Box style={{textAlign:'center',flexGrow: 1}}>
                     <div style={{textAlign:'right'}}>
                         <Link to={`/authors/${author['id']}/edit`}>
-                            <Button variant="outlined" sx={{marginRight: "20px"}} startIcon={<EditIcon />}>Edit</Button>
+                            <Button variant="outlined" sx={{marginRight: "20px"}} startIcon={<EditIcon />}>পরিবর্তন করুন</Button>
                         </Link>
-                        <Button onClick={deleteAuthorHandler} variant="outlined" color="error" startIcon={<DeleteIcon />}>Delete</Button>
+                        <Button onClick={deleteAuthorHandler} variant="outlined" color="error" startIcon={<DeleteIcon />}>মুছে দিন</Button>
                     </div>
                     {author['infos'] ?
                     <div style={{marginBottom: '40px'}}>

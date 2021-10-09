@@ -479,6 +479,30 @@ const AuthorForm = () => {
             }
         } else if (e.target.id.startsWith("info")) {
             const idx = e.target.id.slice(-1);
+            setAuthor((prevState) => {
+                if (e.target.value != "") {
+                    if (prevState['infos']) {
+                        return {
+                            ...prevState,
+                            'infos': [
+                                ...prevState['infos'].slice(0,idx),
+                                e.target.value,
+                                ...prevState['infos'].slice(idx + 1)
+                            ]
+                        }
+                    } else {
+                        return {
+                            ...prevState,
+                            'infos': [
+                                e.target.value
+                            ]
+                        }
+                    }
+                }else {
+                    delete prevState['infos'][idx]
+                    return {...prevState}
+                }
+            });
         }
     };
 
@@ -492,7 +516,7 @@ const AuthorForm = () => {
                             startIcon={<ArrowBackIcon />}
                             variant="outlined"
                         >
-                            Back
+                            ফিরে যান
                         </Button>
                     </Link>
                 </div>
@@ -519,8 +543,10 @@ const AuthorForm = () => {
                         onChange={textFieldChangeHandler}
                         value={
                             author
-                                ? author["imageUrl"] != "https://alok-mishra.net/wp-content/uploads/2015/11/Know-the-poet-in-you-become-a-poet.jpg"
-                                    ? author["imageUrl"]
+                                ? author["imageUrl"]
+                                    ?author['imageUrl'] != "https://alok-mishra.net/wp-content/uploads/2015/11/Know-the-poet-in-you-become-a-poet.jpg"
+                                        ? author["imageUrl"]
+                                        : ""
                                     : ""
                                 : ""
                         }
@@ -1076,7 +1102,7 @@ const AuthorForm = () => {
                         variant="outlined"
                         color="success"
                     >
-                        Submit
+                        জমা করুন
                     </Button>
                 </Stack>
             </Box>

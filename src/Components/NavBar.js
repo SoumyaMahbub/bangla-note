@@ -28,6 +28,9 @@ const NavBar = () => {
                         <Route path="/quiz">
                             <Typography variant="h6" component="div">কুইজ</Typography>
                         </Route>
+                        <Route path="/mcq-quiz">
+                            <Typography variant="h6" component="div">এম.সি.কিউ. কুইজ</Typography>
+                        </Route>
                         <Route path="/add-author">
                             <Typography variant="h6" component="div">নতুন লেখক</Typography>
                         </Route>
