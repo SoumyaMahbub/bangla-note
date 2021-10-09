@@ -394,6 +394,12 @@ const AuthorForm = () => {
                 }
             } else {
                 delete prevState[listName][idx][key];
+                if (!Object.keys(prevState[listName][idx]).length) {
+                    prevState[listName].splice(idx, 1);
+                }
+                if (!prevState[listName].length) {
+                    delete prevState[listName];
+                }
                 return { ...prevState };
             }
         });
@@ -499,7 +505,12 @@ const AuthorForm = () => {
                         }
                     }
                 }else {
-                    delete prevState['infos'][idx]
+                    if (prevState['infos']) {
+                        prevState['infos'].splice(idx, 1);
+                        if (!prevState['infos'].length) {
+                            delete prevState['infos'];
+                        }
+                    }
                     return {...prevState}
                 }
             });
