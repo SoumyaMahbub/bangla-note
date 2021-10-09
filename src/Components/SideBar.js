@@ -9,7 +9,8 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import AddIcon from '@mui/icons-material/Add';
 import Toolbar from "@mui/material/Toolbar";
 import Divider from "@mui/material/Divider";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 const drawerWidth = 240;
 
@@ -39,6 +40,14 @@ const SideBar = () => {
                             <ListItemText>লেখকসমূহ</ListItemText>
                         </ListItem>
                     </Link>
+                    <Link to="/questions">
+                        <ListItem button>
+                            <ListItemIcon>
+                                <AssignmentIcon />
+                            </ListItemIcon>
+                            <ListItemText>প্রশ্নসমূহ</ListItemText>
+                        </ListItem>
+                    </Link>
                     <Link to="/quiz">
                         <ListItem button>
                             <ListItemIcon>
@@ -47,7 +56,7 @@ const SideBar = () => {
                             <ListItemText>কুইজ</ListItemText>
                         </ListItem>
                     </Link>
-                    <Link to="/add-poet">
+                    <Link to="/add-author">
                         <ListItem button>
                             <ListItemIcon>
                                 <AddIcon />
