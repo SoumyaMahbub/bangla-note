@@ -14,6 +14,7 @@ import QuestionAccordion from "./QuestionAccordion.js";
 import $ from 'jquery';
 
 const McqQuiz = () => {
+    const [radioDisabled, setRadioDisabled] = React.useState(false);
     const [marksCounter, setMarksCounter] = useState(0);
     const [questionCounter, setQuestionCounter] = useState(0);
     const [options, setOptions] = useState([]);
@@ -72,6 +73,7 @@ const McqQuiz = () => {
             });
     };  
     const verifyAnswer = (e) => {
+        setRadioDisabled(true);
         setOptionValue(e.target.value);
         setQuestionCounter(prevState => prevState + 1);
         if(e.target.value == questionObj['answer']) {
@@ -83,6 +85,7 @@ const McqQuiz = () => {
     }
 
     const resetQuestion = () => {
+        setRadioDisabled(false);
         setOptionValue("");
         const question = questions[Math.floor(Math.random()*questions.length)];
         let matchedOptions = options.filter(optionObj => optionObj.type == question.optionType);
@@ -127,7 +130,7 @@ const McqQuiz = () => {
                             questionObj ?
                             questionObj['options'] ?
                             questionObj['options'].map(option => {
-                                return <FormControlLabel value={option}control={<Radio />} label={option}/>
+                                return <FormControlLabel disabled={radioDisabled} value={option}control={<Radio />} label={option}/>
                             }) : "" : ""
                         }
                     </RadioGroup>
