@@ -35,7 +35,6 @@ const McqQuiz = () => {
         width: '95%',
         maxHeight: '95vh',
         bgcolor: 'background.paper',
-        border: '2px solid #000',
         overflowY: 'scroll',
         boxShadow: 24,
         p: 4,
@@ -156,7 +155,7 @@ const McqQuiz = () => {
             >
                 <Box sx={style}>
                     {questionsHistory.map(questionObj => {
-                        return <QuestionAccordion question={questionObj['question']} answer={questionObj['answer']} result={questionObj['result']}/>
+                        return <QuestionAccordion questionObj={questionObj} result={questionObj['result']}/>
                     })}
                 </Box>
             </Modal>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const shuffleArray = (array) => {
     let currentIndex = array.length,  randomIndex;
 

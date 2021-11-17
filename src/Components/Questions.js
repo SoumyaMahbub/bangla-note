@@ -30,7 +30,7 @@ const Questions = () => {
         <Box sx={{width: "95%"}} m="30px auto">
             <Toolbar/>
             {authors ? authors.map(author => {
-                return <AuthorQuestionsCard key={author.id} authorName={author['name']} authorQuestions={author['questions']}></AuthorQuestionsCard>
+                return <AuthorQuestionsCard key={author.id} author={author}></AuthorQuestionsCard>
             }): ""}
             <Typography sx={{marginTop: "20px"}}>Total Questions: {totalQuestions}</Typography>
         </Box>
