@@ -11,6 +11,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { Typography } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -37,7 +38,7 @@ const SideBar = () => {
                             <ListItemIcon>
                                 <FaceIcon />
                             </ListItemIcon>
-                            <ListItemText>লেখকসমূহ</ListItemText>
+                            <ListItemText disableTypography primary={<Typography type="body2" style={{ color: '#FFFFFF' }}>লেখকসমূহ</Typography>}></ListItemText>
                         </ListItem>
                     </Link>
                     <Link to="/questions">
@@ -45,7 +46,7 @@ const SideBar = () => {
                             <ListItemIcon>
                                 <AssignmentIcon />
                             </ListItemIcon>
-                            <ListItemText>প্রশ্নসমূহ</ListItemText>
+                            <ListItemText disableTypography primary={<Typography type="body2" style={{ color: '#FFFFFF' }}>প্রশ্নসমূহ</Typography>}></ListItemText>
                         </ListItem>
                     </Link>
                     <Link to="/quiz">
@@ -53,7 +54,7 @@ const SideBar = () => {
                             <ListItemIcon>
                                 <QuizIcon />
                             </ListItemIcon>
-                            <ListItemText>কুইজ</ListItemText>
+                            <ListItemText disableTypography primary={<Typography type="body2" style={{ color: '#FFFFFF' }}>কুইজ</Typography>}></ListItemText>
                         </ListItem>
                     </Link>
                     <Link to="/add-author">
@@ -61,7 +62,7 @@ const SideBar = () => {
                             <ListItemIcon>
                                 <AddIcon />
                             </ListItemIcon>
-                            <ListItemText>নতুন লেখক</ListItemText>
+                            <ListItemText disableTypography primary={<Typography type="body2" style={{ color: '#FFFFFF' }}>নতুন লেখক</Typography>}></ListItemText>
                         </ListItem>
                     </Link>
                 </List>

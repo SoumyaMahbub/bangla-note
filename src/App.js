@@ -1,4 +1,5 @@
 import "./App.css";
+import { createTheme, ThemeProvider} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Authors from "./Components/Authors";
 import Quiz from "./Components/Quiz";
@@ -19,7 +20,13 @@ import McqQuiz from "./Components/McqQuiz";
 
 
 function App() {
+	const darkTheme = createTheme({
+		palette: {
+			mode: 'dark',
+		}
+	})
     return (
+		<ThemeProvider theme={darkTheme}>
 		<LocalizationProvider dateAdapter={DateAdapter}>
 		<Router>
 		<div className="App">
@@ -56,6 +63,7 @@ function App() {
 		</div>
 		</Router>
 		</LocalizationProvider>
+		</ThemeProvider>
     );
 }
 
