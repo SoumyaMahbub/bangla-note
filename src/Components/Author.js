@@ -56,8 +56,9 @@ const Author = (props) => {
                     </div>
                     <h1 style={{marginBottom: "0px"}}>{author['name']}</h1>
                     {
-                        author['pseudonym'] ? <h1 style={{marginTop: "0px"}}>{ "(" + author['pseudonym'] + ")"}</h1> : ""
+                        author['pseudonym'] ? <h1 style={{marginTop: "0px", marginBottom: "0px"}}>{ "(" + author['pseudonym'] + ")"}</h1> : ""
                     }
+                    <Typography variant="p">{author['textbookWritings']}</Typography>
                     <div>
                         <img style={{maxWidth: '100%', maxHeight: '350px'}} src={author['imageUrl']}/>
                     </div>

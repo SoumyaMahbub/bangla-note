@@ -114,6 +114,14 @@ const AuthorForm = () => {
         }
     };
 
+    if(typeof(String.prototype.trim) === "undefined")
+    {
+        String.prototype.trim = function() 
+        {
+            return String(this).replace(/^\s+|\s+$/g, '');
+        };
+    }
+
     const makeQuestions = () => {
         makeQuestion(
             author["name"],
@@ -131,6 +139,15 @@ const AuthorForm = () => {
                 : author["birthYear"],
             "date"
         );
+        author['textbookWritings'].split(",").forEach(writing => {
+            writing = $.trim(writing);
+            makeQuestion(
+                author['name'],
+                "`" + writing + "` কার লেখা?",
+                author['name'],
+                'name'
+            )
+        })
         if (author["birthPlace"]) {
             makeQuestion(
                 author["name"],
@@ -339,9 +356,10 @@ const AuthorForm = () => {
     const submitHandler = () => {
         if (
             $("#name-input").val() == "" ||
-            $("#birth-year-input").val() == ""
+            $("#birth-year-input").val() == "" ||
+            $("#textbook-writings-input").val() == ""
         ) {
-            alert("নাম এবং জন্মসাল ফাঁকা থাকা যাবে না");
+            alert("নাম, জন্মসাল বা পাঠ্যপুস্তক রচিত লেখা ফাঁকা থাকা যাবে না");
         } else {
             if (!author.imageUrl) {
                 author.imageUrl =
@@ -431,6 +449,7 @@ const AuthorForm = () => {
             e.target.id == "death-month-input" ||
             e.target.id == "death-year-input" ||
             e.target.id == "death-place-input" ||
+            e.target.id == "textbook-writings-input" ||
             e.target.id == "pseudonym-input"
         ) {
             const splittedId = e.target.id.split("-");
@@ -697,6 +716,20 @@ const AuthorForm = () => {
                         />
                     </Stack>
                     <TextField
+                        id="textbook-writings-input"
+                        label="পাঠ্যপুস্তকে রচিত লেখা "
+                        variant="outlined"
+                        size="small"
+                        onChange={textFieldChangeHandler}
+                        value={
+                            author
+                                ? author["textbookWritings"]
+                                    ? author["textbookWritings"]
+                                    : ""
+                                : ""
+                        }
+                    />
+                    <TextField
                         id="pseudonym-input"
                         label="ছদ্মনাম"
                         variant="outlined"
@@ -763,7 +796,7 @@ const AuthorForm = () => {
                                     }
                                 />
                                 <TextField
-                                    label="স্থান"
+                                    label="স্থান, প্রতিষ্ঠানের নাম"
                                     variant="outlined"
                                     size="small"
                                     onChange={textFieldChangeHandler}
@@ -851,7 +884,7 @@ const AuthorForm = () => {
                                     }
                                 />
                                 <TextField
-                                    label="স্থান"
+                                    label="স্থান, প্রতিষ্ঠানের নাম"
                                     variant="outlined"
                                     size="small"
                                     onChange={textFieldChangeHandler}
