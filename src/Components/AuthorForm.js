@@ -28,6 +28,7 @@ const AuthorForm = () => {
     const [infosCounter, setInfosCounter] = useState(0);
 
     const addAuthorHandler = async (author) => {
+        console.log(author);
         const response = await api.post("/authors", author);
         setRedirect("/authors");
     };
@@ -352,6 +353,45 @@ const AuthorForm = () => {
         })
         return generatedQuestions;
     };
+    const cutAuthor = () => {
+        let modifiedAuthor = {...author}
+        if(modifiedAuthor['educations']) {
+            modifiedAuthor['educations'].forEach((education, idx) => {
+                if(Object.keys(education).length === 0) {
+                    modifiedAuthor['educations'].splice(idx, 1)
+                }
+            })
+        } 
+        if (modifiedAuthor['jobs']) {
+            modifiedAuthor['jobs'].forEach((job, idx) => {
+                if(Object.keys(job).length === 0) {
+                    modifiedAuthor['jobs'].splice(idx, 1)
+                }
+            })
+        }
+        if (modifiedAuthor['writings']) {
+            modifiedAuthor['writings'].forEach((writing, idx) => {
+                if(Object.keys(writing).length === 0) {
+                    modifiedAuthor['writings'].splice(idx, 1)
+                }
+            })
+        }
+        if (modifiedAuthor['awards']) {
+            modifiedAuthor['awards'].forEach((award, idx) => {
+                if(Object.keys(award).length === 0) {
+                    modifiedAuthor['awards'].splice(idx, 1)
+                }
+            })
+        }
+        if (modifiedAuthor['infos']) {
+            modifiedAuthor['infos'].forEach((info, idx) => {
+                if(info == "") {
+                    modifiedAuthor['infos'].splice(idx, 1)
+                }
+            })
+        }
+        return modifiedAuthor;
+    }
 
     const submitHandler = () => {
         if (
@@ -365,10 +405,12 @@ const AuthorForm = () => {
                 author.imageUrl =
                     "https://alok-mishra.net/wp-content/uploads/2015/11/Know-the-poet-in-you-become-a-poet.jpg";
             }
+            const modifiedAuthor = cutAuthor();
+            console.log(modifiedAuthor);
             if (id) {
-                editAuthorHandler({ ...author, questions: makeQuestions() });
+                editAuthorHandler({ ...modifiedAuthor, questions: makeQuestions() });
             } else {
-                addAuthorHandler({ ...author, questions: makeQuestions() });
+                addAuthorHandler({ ...modifiedAuthor, questions: makeQuestions() });
             }
         }
     };
@@ -376,48 +418,19 @@ const AuthorForm = () => {
     const updateObjectedListsOfAuthor = (idx, listName, key, value) => {
         setAuthor((prevState) => {
             if (value != "") {
-                if (prevState[listName]) {
-                    if (prevState[listName][idx]) {
-                        return {
-                            ...prevState,
-                            [listName]: [
-                                ...prevState[listName].slice(0, idx),
-                                {
-                                    ...prevState[listName][idx],
-                                    [key]: value,
-                                },
-                                ...prevState[listName].slice(idx + 1),
-                            ],
-                        };
-                    } else {
-                        return {
-                            ...prevState,
-                            [listName]: [
-                                ...prevState[listName].slice(0, idx),
-                                {
-                                    [key]: value,
-                                },
-                            ],
-                        };
-                    }
-                } else {
-                    return {
-                        ...prevState,
-                        [listName]: [
-                            {
-                                [key]: value,
-                            },
-                        ],
-                    };
-                }
+                return {
+                    ...prevState,
+                    [listName]: [
+                        ...prevState[listName].slice(0, idx),
+                        {
+                            ...prevState[listName][idx],
+                            [key]: value,
+                        },
+                        ...prevState[listName].slice(idx + 1),
+                    ],
+                };
             } else {
                 delete prevState[listName][idx][key];
-                if (!Object.keys(prevState[listName][idx]).length) {
-                    prevState[listName].splice(idx, 1);
-                }
-                if (!prevState[listName].length) {
-                    delete prevState[listName];
-                }
                 return { ...prevState };
             }
         });
@@ -505,32 +518,13 @@ const AuthorForm = () => {
         } else if (e.target.id.startsWith("info")) {
             const idx = e.target.id.slice(-1);
             setAuthor((prevState) => {
-                if (e.target.value != "") {
-                    if (prevState['infos']) {
-                        return {
-                            ...prevState,
-                            'infos': [
-                                ...prevState['infos'].slice(0,idx),
-                                e.target.value,
-                                ...prevState['infos'].slice(idx + 1)
-                            ]
-                        }
-                    } else {
-                        return {
-                            ...prevState,
-                            'infos': [
-                                e.target.value
-                            ]
-                        }
-                    }
-                }else {
-                    if (prevState['infos']) {
-                        prevState['infos'].splice(idx, 1);
-                        if (!prevState['infos'].length) {
-                            delete prevState['infos'];
-                        }
-                    }
-                    return {...prevState}
+                return {
+                    ...prevState,
+                    'infos': [
+                        ...prevState['infos'].slice(0,idx),
+                        e.target.value,
+                        ...prevState['infos'].slice(idx + 1)
+                    ]
                 }
             });
         }
@@ -846,8 +840,22 @@ const AuthorForm = () => {
                         );
                     })}
                     <Button
-                        onClick={() =>
+                        onClick={() => {
+                            setAuthor(prevState => {
+                                if (prevState["educations"]) {
+                                    return {
+                                        ...prevState,
+                                        educations: [...prevState["educations"], {}]       
+                                    }
+                                }else {
+                                    return {
+                                        ...prevState,
+                                        educations: [{}]
+                                    }
+                                }
+                            })
                             setEducationsCounter((prevState) => prevState + 1)
+                            }
                         }
                         variant="contained"
                     >
@@ -931,9 +939,22 @@ const AuthorForm = () => {
                         );
                     })}
                     <Button
-                        onClick={() =>
+                        onClick={() =>{
+                            setAuthor(prevState => {
+                                if (prevState["jobs"]) {
+                                    return {
+                                        ...prevState,
+                                        jobs: [...prevState["jobs"], {}]       
+                                    }
+                                }else {
+                                    return {
+                                        ...prevState,
+                                        jobs: [{}]
+                                    }
+                                }
+                            })
                             setJobsCounter((prevState) => prevState + 1)
-                        }
+                        }}
                         variant="contained"
                     >
                         কর্ম যোগ করুন
@@ -1017,9 +1038,22 @@ const AuthorForm = () => {
                         );
                     })}
                     <Button
-                        onClick={() =>
+                        onClick={() => {
+                            setAuthor(prevState => {
+                                if (prevState["writings"]) {
+                                    return {
+                                        ...prevState,
+                                        writings: [...prevState["writings"], {}]       
+                                    }
+                                }else {
+                                    return {
+                                        ...prevState,
+                                        writings: [{}]
+                                    }
+                                }
+                            })
                             setWritingsCounter((prevState) => prevState + 1)
-                        }
+                        }}
                         variant="contained"
                     >
                         লেখা যোগ করুন
@@ -1105,9 +1139,22 @@ const AuthorForm = () => {
                         );
                     })}
                     <Button
-                        onClick={() =>
+                        onClick={() => {
+                            setAuthor(prevState => {
+                                if (prevState["awards"]) {
+                                    return {
+                                        ...prevState,
+                                        awards: [...prevState["awards"], {}]       
+                                    }
+                                }else {
+                                    return {
+                                        ...prevState,
+                                        awards: [{}]
+                                    }
+                                }
+                            })
                             setAwardsCounter((prevState) => prevState + 1)
-                        }
+                        }}
                         variant="contained"
                     >
                         পদক যোগ করুন
@@ -1133,9 +1180,22 @@ const AuthorForm = () => {
                         );
                     })}
                     <Button
-                        onClick={() =>
+                        onClick={() => {
+                            setAuthor(prevState => {
+                                if (prevState["infos"]) {
+                                    return {
+                                        ...prevState,
+                                        infos: [...prevState["infos"], ""]       
+                                    }
+                                }else {
+                                    return {
+                                        ...prevState,
+                                        infos: [""]
+                                    }
+                                }
+                            })
                             setInfosCounter((prevState) => prevState + 1)
-                        }
+                        }}
                         variant="contained"
                     >
                         তথ্য যোগ করুন
