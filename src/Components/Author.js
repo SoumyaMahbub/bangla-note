@@ -105,7 +105,7 @@ const Author = (props) => {
                                     <TableRow>
                                         <TableCell>ডিগ্রী</TableCell>
                                         <TableCell>বিষয়</TableCell>
-                                        <TableCell>স্থান</TableCell>
+                                        <TableCell>স্থান, প্রতিষ্ঠানের নাম</TableCell>
                                         <TableCell>সাল</TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -134,7 +134,7 @@ const Author = (props) => {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>নাম</TableCell>
-                                        <TableCell>স্থান</TableCell>
+                                        <TableCell>স্থান, প্রতিষ্ঠানের নাম</TableCell>
                                         <TableCell>সাল</TableCell>
                                     </TableRow>
                                 </TableHead>

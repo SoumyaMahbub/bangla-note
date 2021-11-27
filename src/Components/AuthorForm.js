@@ -918,7 +918,7 @@ const AuthorForm = () => {
                                     variant="outlined"
                                     size="small"
                                     onChange={textFieldChangeHandler}
-                                    id={`jobs-year-input${i}`}
+                                    id={`job-year-input${i}`}
                                     value={
                                         author
                                             ? author["jobs"]
@@ -926,9 +926,11 @@ const AuthorForm = () => {
                                                     ? author["jobs"][i][
                                                           "year"
                                                       ]
-                                                        ? author["jobs"][
+                                                        ? banglaToEnglishNumber(
+                                                            author["jobs"][
                                                               i
                                                           ]["year"]
+                                                        )
                                                         : ""
                                                     : ""
                                                 : ""
