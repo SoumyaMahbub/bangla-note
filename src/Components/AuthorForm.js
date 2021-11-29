@@ -199,7 +199,7 @@ const AuthorForm = () => {
                         author["name"] +
                             " কোন বিষয়ে " +
                             education["degree"] +
-                            " পাশ করেন",
+                            " পাশ করেন?",
                         education["topic"],
                         "educationTopic"
                     );
@@ -272,10 +272,10 @@ const AuthorForm = () => {
             const firstJob = author['jobs'][0]['name'];
             let sameJob = true;
             author['jobs'].forEach((job) => {
-                if (job['name'] != firstJob) {
+                if (job['name'] && job['name'] != firstJob) {
                     sameJob = false;
                 }
-                if (job['place']) {
+                if (job['name'] && job['place']) {
                     makeQuestion(
                         author['name'],
                         author['name'] + " " + job['place'] + " এ কোন পেশায় নিয়জিত ছিলেন?",
@@ -502,14 +502,14 @@ const AuthorForm = () => {
             const splittedId = e.target.id.split("-");
             if (!isNaN(e.target.value)) {
                 updateObjectedListsOfAuthor(
-                    idx,
+                    parseInt(idx),
                     splittedId[0] + "s",
                     splittedId[1],
                     englishToBanglaNumber(e.target.value)
                 );
             } else {
                 updateObjectedListsOfAuthor(
-                    idx,
+                    parseInt(idx),
                     splittedId[0] + "s",
                     splittedId[1],
                     e.target.value

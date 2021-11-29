@@ -12,6 +12,7 @@ const banglaToEnglishNumber = (number) => {
         '৯': 9
     };
     const output = []
+    console.log(number);
     for (var i = 0; i < number.length; i++) {
         if (numbers.hasOwnProperty(number[i])) {
         output.push(numbers[number[i]]);
