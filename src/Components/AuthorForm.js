@@ -523,7 +523,7 @@ const AuthorForm = () => {
                     'infos': [
                         ...prevState['infos'].slice(0,idx),
                         e.target.value,
-                        ...prevState['infos'].slice(idx + 1)
+                        ...prevState['infos'].slice(parseInt(idx) + 1)
                     ]
                 }
             });
