@@ -498,7 +498,7 @@ const AuthorForm = () => {
             e.target.id.startsWith("award-year") ||
             e.target.id.startsWith("award-reason")
         ) {
-            const idx = e.target.id.slice(-1);
+            const idx = e.target.id.split("-")[2].replace("input", "");
             const splittedId = e.target.id.split("-");
             if (!isNaN(e.target.value)) {
                 updateObjectedListsOfAuthor(

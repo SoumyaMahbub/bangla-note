@@ -39,7 +39,7 @@ const AuthorQuestionsCard = (props) => {
         await api.put(`/authors/${editedAuthor.id}`, editedAuthor);
         const response = await api.get(`/options`);
         const options = response.data;
-        const matchedOption = options.filter(option => option.type === questionObj['type'] && option.option === questionObj['answer']);
+        const matchedOption = options.filter(option => option.type === questionObj['optionType'] && option.option === questionObj['answer']);
         if (!matchedOption.length) {
             if (banglaToEnglishNumber(questionObj['answer']) && questionObj['answer'].length == 4) {
                 const optionObjOne = {
