@@ -356,39 +356,59 @@ const AuthorForm = () => {
     const cutAuthor = () => {
         let modifiedAuthor = {...author}
         if(modifiedAuthor['educations']) {
-            modifiedAuthor['educations'].forEach((education, idx) => {
-                if(Object.keys(education).length === 0) {
-                    modifiedAuthor['educations'].splice(idx, 1)
-                }
-            })
+            if (Object.keys(modifiedAuthor['educations'][0]).length === 0) {
+                delete modifiedAuthor['educations']
+            } else {
+                modifiedAuthor['educations'].forEach((education, idx) => {
+                    if(Object.keys(education).length === 0) {
+                        modifiedAuthor['educations'].splice(idx, 1)
+                    }
+                })
+            }
         } 
         if (modifiedAuthor['jobs']) {
-            modifiedAuthor['jobs'].forEach((job, idx) => {
-                if(Object.keys(job).length === 0) {
-                    modifiedAuthor['jobs'].splice(idx, 1)
-                }
-            })
+            if (Object.keys(modifiedAuthor['jobs'][0]).length === 0) {
+                delete modifiedAuthor['jobs']
+            } else {
+                modifiedAuthor['jobs'].forEach((job, idx) => {
+                    if(Object.keys(job).length === 0) {
+                        modifiedAuthor['jobs'].splice(idx, 1)
+                    }
+                })
+            }
         }
         if (modifiedAuthor['writings']) {
-            modifiedAuthor['writings'].forEach((writing, idx) => {
-                if(Object.keys(writing).length === 0) {
-                    modifiedAuthor['writings'].splice(idx, 1)
-                }
-            })
+            if (Object.keys(modifiedAuthor['writings'][0]).length === 0) {
+                delete modifiedAuthor['writings']
+            } else {
+                modifiedAuthor['writings'].forEach((writing, idx) => {
+                    if(Object.keys(writing).length === 0) {
+                        modifiedAuthor['writings'].splice(idx, 1)
+                    }
+                })
+            }
         }
         if (modifiedAuthor['awards']) {
-            modifiedAuthor['awards'].forEach((award, idx) => {
-                if(Object.keys(award).length === 0) {
-                    modifiedAuthor['awards'].splice(idx, 1)
-                }
-            })
+            if (Object.keys(modifiedAuthor['awards'][0]).length === 0) {
+                delete modifiedAuthor['awards']
+            } else {
+                modifiedAuthor['awards'].forEach((award, idx) => {
+                    if(Object.keys(award).length === 0) {
+                        modifiedAuthor['awards'].splice(idx, 1)
+                    }
+                })
+            }
         }
         if (modifiedAuthor['infos']) {
-            modifiedAuthor['infos'].forEach((info, idx) => {
-                if(info == "") {
-                    modifiedAuthor['infos'].splice(idx, 1)
-                }
-            })
+            if (Object.keys(modifiedAuthor['infos'][0]).length === 0) {
+                delete modifiedAuthor['infos']
+            } else {
+                modifiedAuthor['infos'].forEach((info, idx) => {
+                    if(info == "") {
+                        modifiedAuthor['infos'].splice(idx, 1)
+                    }
+                })
+            }
         }
         return modifiedAuthor;
     }
@@ -431,6 +451,10 @@ const AuthorForm = () => {
                 };
             } else {
                 delete prevState[listName][idx][key];
+                console.log(Object.keys(prevState[listName][idx]).length);
+                if (Object.keys(prevState[listName][idx]).length == 0) {
+                    delete prevState[listName];
+                }
                 return { ...prevState };
             }
         });
