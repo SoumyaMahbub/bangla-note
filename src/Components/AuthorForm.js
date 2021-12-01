@@ -93,24 +93,49 @@ const AuthorForm = () => {
             optionType: optionType,
         };
         generatedQuestions.push(questionObj);
-        const matchedOption = generatedOptions.filter(optionObj => optionObj.type == questionObj['optionType'] && optionObj.option == questionObj['answer']);
-        if (matchedOption.length == 0) {
-            if (banglaToEnglishNumber(questionObj['answer']) && questionObj['answer'].length == 4) {
-                const optionObjOne = {
-                    type: "year",
-                    option: questionObj['answer'],
+        if (Array.isArray(questionObj['answer'])) {
+            questionObj['answer'].forEach(answer => {
+                const matchedOption = generatedOptions.filter(optionObj => optionObj.type == questionObj['optionType'] && optionObj.option == answer);
+                if (matchedOption.length == 0) {
+                    if (banglaToEnglishNumber(answer) && answer.length == 4) {
+                        const optionObjOne = {
+                            type: "year",
+                            option: answer,
+                        }
+                        const optionObjTwo = {
+                            type: "date",
+                            option: answer,
+                        }
+                        generatedOptions.push(optionObjOne, optionObjTwo);
+                    } else {
+                        const optionObj = {
+                            type: questionObj['optionType'],
+                            option: answer,
+                        }
+                        generatedOptions.push(optionObj);
+                    }
                 }
-                const optionObjTwo = {
-                    type: "date",
-                    option: questionObj['answer'],
+            })
+        } else {
+            const matchedOption = generatedOptions.filter(optionObj => optionObj.type == questionObj['optionType'] && optionObj.option == questionObj['answer']);
+            if (matchedOption.length == 0) {
+                if (banglaToEnglishNumber(questionObj['answer']) && questionObj['answer'].length == 4) {
+                    const optionObjOne = {
+                        type: "year",
+                        option: questionObj['answer'],
+                    }
+                    const optionObjTwo = {
+                        type: "date",
+                        option: questionObj['answer'],
+                    }
+                    generatedOptions.push(optionObjOne, optionObjTwo);
+                } else {
+                    const optionObj = {
+                        type: questionObj['optionType'],
+                        option: questionObj['answer'],
+                    }
+                    generatedOptions.push(optionObj);
                 }
-                generatedOptions.push(optionObjOne, optionObjTwo);
-            } else {
-                const optionObj = {
-                    type: questionObj['optionType'],
-                    option: questionObj['answer'],
-                }
-                generatedOptions.push(optionObj);
             }
         }
     };
@@ -294,6 +319,16 @@ const AuthorForm = () => {
             }
         }
         if (author["writings"]) {
+            const writingnames = [];
+            author['writings'].forEach((writing, idx) => {
+                writingnames[idx] = writing['name']
+            })
+            makeQuestion(
+                author['name'],
+                "নিচের কোনটি " + author['name'] + " এর লেখা?",
+                writingnames,
+                "writingName"
+            )
             author["writings"].forEach((writing) => {
                 makeQuestion(
                     author['name'],
@@ -426,7 +461,6 @@ const AuthorForm = () => {
                     "https://alok-mishra.net/wp-content/uploads/2015/11/Know-the-poet-in-you-become-a-poet.jpg";
             }
             const modifiedAuthor = cutAuthor();
-            console.log(modifiedAuthor);
             if (id) {
                 editAuthorHandler({ ...modifiedAuthor, questions: makeQuestions() });
             } else {

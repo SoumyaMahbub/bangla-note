@@ -46,7 +46,7 @@ const QuestionAccordion = (props) => {
             <AccordionDetails>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <Typography sx={{ width: '100%', textAlign: 'left', color: '#929292'}}>
-                        উত্তর: {props.questionObj['answer']}
+                        উত্তর: {Array.isArray(props.questionObj['answer']) ? props.questionObj['answer'].join(", ") : props.questionObj['answer']}
                     </Typography>
                     {!props.result ?
                     <Tooltip onClick={editAuthorHandler} title="Delete">

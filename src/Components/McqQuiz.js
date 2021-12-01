@@ -55,20 +55,30 @@ const McqQuiz = () => {
                     .then(response => {
                         const options = response.data;
                         setOptions(options);
-                        let matchedOptions = options.filter(optionObj => optionObj.type == question.optionType);
-                        shuffleArray(matchedOptions);
+                        question['options'] = [];
+                        let matchedOptions = [];
+                        let correctAnswer;
+                        if (Array.isArray(question['answer'])) {
+                            const correctAnswers = [...question['answer']];
+                            const answeridx = Math.floor(Math.random()*correctAnswers.length);
+                            correctAnswer = correctAnswers[answeridx];
+                            matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && !correctAnswers.includes(optionObj.option));
+                        } else {
+                            correctAnswer = question['answer'];
+                            matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && optionObj.option !== question['answer']);
+                        }
                         if (matchedOptions.length > 5) {
                             matchedOptions = matchedOptions.slice(0, 5);
                         }
-                        question['options'] = [];
+                        matchedOptions.push({
+                            "type": question.optionType, 
+                            "option": correctAnswer
+                        });
+                        shuffleArray(matchedOptions);
                         matchedOptions.forEach(optionObj => {
                             question['options'].push(optionObj['option']);
                         })
-                        const matchedAnswer = matchedOptions.filter(optionObj => optionObj['option'] == question['answer']);
-                        if (!matchedAnswer.length) {
-                            question['options'].push(question['answer'])
-                        }
-                        setQuestionObj(question);
+                        setQuestionObj({...question, "answer": correctAnswer});
                     })
             });
     };  
@@ -79,7 +89,7 @@ const McqQuiz = () => {
         if(e.target.value == questionObj['answer']) {
             setResult("correct");
             setMarksCounter(prevState => prevState + 1);
-        }else {
+        } else {
             setResult("incorrect");
         }
     }
@@ -88,21 +98,31 @@ const McqQuiz = () => {
         setRadioDisabled(false);
         setOptionValue("");
         const question = questions[Math.floor(Math.random()*questions.length)];
-        let matchedOptions = options.filter(optionObj => optionObj.type == question.optionType);
-        shuffleArray(matchedOptions);
+        question['options'] = [];
+        let matchedOptions = [];
+        let correctAnswer;
+        if (Array.isArray(question['answer'])) {
+            const correctAnswers = [...question['answer']];
+            const answeridx = Math.floor(Math.random()*correctAnswers.length);
+            correctAnswer = correctAnswers[answeridx];
+            matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && !correctAnswers.includes(optionObj.option));
+        } else {
+            correctAnswer = question['answer'];
+            matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && optionObj.option !== question['answer']);
+        }
         if (matchedOptions.length > 5) {
             matchedOptions = matchedOptions.slice(0, 5);
         }
-        question['options'] = [];
+        matchedOptions.push({
+            "type": question.optionType, 
+            "option": correctAnswer
+        });
+        shuffleArray(matchedOptions);
         matchedOptions.forEach(optionObj => {
             question['options'].push(optionObj['option']);
         })
-        const matchedAnswer = matchedOptions.filter(optionObj => optionObj['option'] == question['answer']);
-        if (!matchedAnswer.length) {
-            question['options'].push(question['answer'])
-        }
         const answeredQuestionObj = {...questionObj, result: result};
-        setQuestionObj(question);
+        setQuestionObj({...question, "answer": correctAnswer});
         setQuestionsHistory(prevState => [...prevState, answeredQuestionObj]);
         setResult();
     }
