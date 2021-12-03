@@ -485,10 +485,6 @@ const AuthorForm = () => {
                 };
             } else {
                 delete prevState[listName][idx][key];
-                console.log(Object.keys(prevState[listName][idx]).length);
-                if (Object.keys(prevState[listName][idx]).length == 0) {
-                    delete prevState[listName];
-                }
                 return { ...prevState };
             }
         });
