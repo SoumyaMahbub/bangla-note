@@ -75,6 +75,18 @@ const Author = (props) => {
                         <Typography sx={{textAlign: "left"}} variant="body2">{author['deathPlace']}</Typography>
                     </Stack>:
                     ""}
+                    {author['fatherName']?
+                    <Stack direction="row" spacing={1}>
+                        <Typography sx={{marginLeft: '10px',fontWeight: 700}} variant="body2">পিতার নামঃ </Typography>
+                        <Typography sx={{textAlign: "left"}} variant="body2">{author['fatherName']}</Typography>
+                    </Stack>:
+                    ""}
+                    {author['motherName']?
+                    <Stack direction="row" spacing={1}>
+                        <Typography sx={{marginLeft: '10px',fontWeight: 700}} variant="body2">মাতার নামঃ </Typography>
+                        <Typography sx={{textAlign: "left"}} variant="body2">{author['motherName']}</Typography>
+                    </Stack>:
+                    ""}
                 </Stack>
                 <Box style={{textAlign:'center',flexGrow: 1}}>
                     <div style={{textAlign:'right'}}>

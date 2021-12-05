@@ -517,6 +517,8 @@ const AuthorForm = () => {
             e.target.id == "death-year-input" ||
             e.target.id == "death-place-input" ||
             e.target.id == "textbook-writings-input" ||
+            e.target.id == "father-name-input" ||
+            e.target.id == "mother-name-input" ||
             e.target.id == "pseudonym-input"
         ) {
             const splittedId = e.target.id.split("-");
@@ -765,7 +767,7 @@ const AuthorForm = () => {
                     </Stack>
                     <TextField
                         id="textbook-writings-input"
-                        label="পাঠ্যপুস্তকে রচিত লেখা "
+                        label="পাঠ্যপুস্তকে রচিত লেখা"
                         variant="outlined"
                         size="small"
                         onChange={textFieldChangeHandler}
@@ -773,6 +775,34 @@ const AuthorForm = () => {
                             author
                                 ? author["textbookWritings"]
                                     ? author["textbookWritings"]
+                                    : ""
+                                : ""
+                        }
+                    />
+                    <TextField
+                        id="father-name-input"
+                        label="পিতার নাম"
+                        variant="outlined"
+                        size="small"
+                        onChange={textFieldChangeHandler}
+                        value={
+                            author
+                                ? author["fatherName"]
+                                    ? author["fatherName"]
+                                    : ""
+                                : ""
+                        }
+                    />
+                    <TextField
+                        id="mother-name-input"
+                        label="মাতার নাম"
+                        variant="outlined"
+                        size="small"
+                        onChange={textFieldChangeHandler}
+                        value={
+                            author
+                                ? author["motherName"]
+                                    ? author["motherName"]
                                     : ""
                                 : ""
                         }
