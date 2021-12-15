@@ -12,10 +12,13 @@ import { Box } from "@mui/material";
 import shuffleArray from "../functions/shuffleArray.js";
 import QuestionAccordion from "./QuestionAccordion.js";
 import $ from 'jquery';
+import { useLocation } from 'react-router-dom';
+import  { Redirect } from 'react-router-dom';
 
 const McqQuiz = () => {
     const [radioDisabled, setRadioDisabled] = React.useState(false);
     const [marksCounter, setMarksCounter] = useState(0);
+    const [authors, setAuthors] = useState(true);
     const [questionCounter, setQuestionCounter] = useState(0);
     const [options, setOptions] = useState([]);
     const [questions, setQuestions] = useState([]);
@@ -27,6 +30,8 @@ const McqQuiz = () => {
 
     const handleOpen = () => setModalOpen(true);
     const handleClose = () => setModalOpen(false);
+    
+    const location = useLocation();
 
     const style = {
         position: 'absolute',
@@ -41,46 +46,42 @@ const McqQuiz = () => {
         p: 4,
     };
 
-    const retrieveAuthorsAndOptions = async () => {
-        api.get("/authors")
+    const retrieveAuthorsAndOptions = async (authors) => {
+        let tempQuestions = [];
+        authors.forEach(authorObj => {
+            tempQuestions = [...tempQuestions, ...authorObj['questions']];
+            setQuestions(prevState => [...prevState, ...authorObj['questions']]);
+        });
+        const question = tempQuestions[Math.floor(Math.random()*tempQuestions.length)];
+        api.get("/options")
             .then(response => {
-                const authors = response.data;
-                let tempQuestions = [];
-                authors.forEach(authorObj => {
-                    tempQuestions = [...tempQuestions, ...authorObj['questions']];
-                    setQuestions(prevState => [...prevState, ...authorObj['questions']]);
+                const options = response.data;
+                setOptions(options);
+                question['options'] = [];
+                let matchedOptions = [];
+                let correctAnswer;
+                if (Array.isArray(question['answer'])) {
+                    const correctAnswers = [...question['answer']];
+                    const answeridx = Math.floor(Math.random()*correctAnswers.length);
+                    correctAnswer = correctAnswers[answeridx];
+                    matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && !correctAnswers.includes(optionObj.option));
+                } else {
+                    correctAnswer = question['answer'];
+                    matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && optionObj.option !== question['answer']);
+                }
+                if (matchedOptions.length > 5) {
+                    matchedOptions = matchedOptions.slice(0, 5);
+                }
+                matchedOptions.push({
+                    "type": question.optionType, 
+                    "option": correctAnswer
                 });
-                const question = tempQuestions[Math.floor(Math.random()*tempQuestions.length)];
-                api.get("/options")
-                    .then(response => {
-                        const options = response.data;
-                        setOptions(options);
-                        question['options'] = [];
-                        let matchedOptions = [];
-                        let correctAnswer;
-                        if (Array.isArray(question['answer'])) {
-                            const correctAnswers = [...question['answer']];
-                            const answeridx = Math.floor(Math.random()*correctAnswers.length);
-                            correctAnswer = correctAnswers[answeridx];
-                            matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && !correctAnswers.includes(optionObj.option));
-                        } else {
-                            correctAnswer = question['answer'];
-                            matchedOptions = options.filter(optionObj => optionObj.type == question.optionType && optionObj.option !== question['answer']);
-                        }
-                        if (matchedOptions.length > 5) {
-                            matchedOptions = matchedOptions.slice(0, 5);
-                        }
-                        matchedOptions.push({
-                            "type": question.optionType, 
-                            "option": correctAnswer
-                        });
-                        shuffleArray(matchedOptions);
-                        matchedOptions.forEach(optionObj => {
-                            question['options'].push(optionObj['option']);
-                        })
-                        setQuestionObj({...question, "answer": correctAnswer});
-                    })
-            });
+                shuffleArray(matchedOptions);
+                matchedOptions.forEach(optionObj => {
+                    question['options'].push(optionObj['option']);
+                })
+                setQuestionObj({...question, "answer": correctAnswer});
+            })
     };  
     const verifyAnswer = (e) => {
         setRadioDisabled(true);
@@ -129,12 +130,21 @@ const McqQuiz = () => {
 
     useEffect(() => {
         const getAllAuthorsAndOptions = async () => {
-            await retrieveAuthorsAndOptions();
+            const authors = location.authors;
+            setAuthors(authors);
+            if (!authors) {
+                return
+            }
+            await retrieveAuthorsAndOptions(authors);
         }
         getAllAuthorsAndOptions();
     }, []);
+
+    if (!authors) {
+        return <Redirect to='/mcq-quiz-options'/>
+    }
     return (
-        <Box di>
+        <Box>
             <Toolbar/>
             <Card variant="outlined" sx={{ width: "70%", margin: "50px auto 20px auto"}}>
                 <CardContent sx={{width:"90%", margin: "10px auto 0px auto"}}>

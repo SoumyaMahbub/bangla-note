@@ -17,6 +17,7 @@ import {
 	Route,
   } from "react-router-dom";
 import McqQuiz from "./Components/McqQuiz";
+import McqQuizOptions from "./Components/McqQuizOptions";
 
 
 function App() {
@@ -53,6 +54,9 @@ function App() {
 						</Route>
 						<Route path="/mcq-quiz">
 							<McqQuiz />
+						</Route>
+						<Route path="/mcq-quiz-options">
+							<McqQuizOptions />
 						</Route>
 						<Route key="add-author" path="/add-author">
 							<AuthorForm />

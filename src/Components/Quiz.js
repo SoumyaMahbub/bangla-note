@@ -12,7 +12,7 @@ const Quiz = () => {
             <Toolbar/>
             <Stack sx={{width: "75%", margin: "auto"}} spacing={2}>
                 <Typography variant="h3" sx={{marginBottom: "30px"}}>কোন ধরণের কুইজে অংশ নিতে চান?</Typography>
-                <Link to="/mcq-quiz">
+                <Link to="/mcq-quiz-options">
                     <Button sx={{width: "100%"}} size="large" variant="outlined">এম.সি.কিউ. কুইজ</Button>
                 </Link>
                 <Link to="/general-quiz">
