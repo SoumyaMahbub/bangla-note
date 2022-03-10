@@ -216,6 +216,22 @@ const AuthorForm = () => {
                 "pseudonym"
             );
         }
+        if (author['fatherName']) {
+            makeQuestion(
+                author['name'],
+                author['name'] + " এর পিতার নাম কি?",
+                author['fatherName'],
+                "fatherName"
+            )
+        }
+        if (author['motherName']) {
+            makeQuestion(
+                author['name'],
+                author['name'] + " এর মাতার নাম কি?",
+                author['motherName'],
+                "motherName"
+            )
+        }
         if (author["educations"]) {
             author["educations"].forEach((education) => {
                 if (education["degree"] && education["topic"]) {
