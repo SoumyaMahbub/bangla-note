@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import api from "../api/data.js";
+
 import { Card, Modal, Toolbar } from "@mui/material";
 import { CardContent } from "@mui/material";
 import { Typography } from "@mui/material";
@@ -14,6 +14,7 @@ import QuestionAccordion from "./QuestionAccordion.js";
 import $ from 'jquery';
 import { useLocation } from 'react-router-dom';
 import  { Redirect } from 'react-router-dom';
+import axios from "axios";
 
 const McqQuiz = () => {
     const [radioDisabled, setRadioDisabled] = React.useState(false);
@@ -53,7 +54,7 @@ const McqQuiz = () => {
             setQuestions(prevState => [...prevState, ...authorObj['questions']]);
         });
         const question = tempQuestions[Math.floor(Math.random()*tempQuestions.length)];
-        api.get("/options")
+        axios.get("http://localhost:5000/options")
             .then(response => {
                 const options = response.data;
                 setOptions(options);

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import api from '../api/data.js';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -12,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import { Redirect } from 'react-router';
+import axios from 'axios';
 
 const QuestionAccordion = (props) => {
     const generatedOptions = [];
@@ -19,11 +19,9 @@ const QuestionAccordion = (props) => {
 
     const editAuthorHandler = async () => {
         const editedAuthor = {...props.author};
-        editedAuthor['questions'].splice(props.id, 1);
-        console.log(editedAuthor);
-        const response = await api.put(`/authors/${editedAuthor.id}`, editedAuthor);
-        
-        setRedirect('/questions');
+        editedAuthor['questions'].splice(props.questionId, 1);
+        axios.put(`http://localhost:5000/authors/${editedAuthor['_id']}`, editedAuthor)
+            .then(setRedirect('/questions'))
     };
 
     if (redirect) {

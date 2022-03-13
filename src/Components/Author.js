@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Toolbar from '@mui/material/Toolbar';
 import Button from "@mui/material/Button";
 import Typography from '@mui/material/Typography';
@@ -15,7 +20,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Redirect, useParams } from 'react-router';
-import api from "../api/data.js";
 import banglaLifespan from '../functions/banglaLifespan.js';
 import englishToBanglaNumber from '../functions/englishToBanglaNumber.js';
 import { Link } from 'react-router-dom';
@@ -23,20 +27,24 @@ const Author = (props) => {
     const { id } = useParams();
     const [author, setAuthor] = useState();
     const [redirect, setRedirect] = useState(false);
-    const retrieveAuthor = async () => {
-        const response = await api.get(`/authors/${id}`);
-        return response.data;
-    }
-    const deleteAuthorHandler = async() => {
-        const response = await api.delete(`/authors/${id}`);
-        setRedirect("/authors");
+    // const retrieveAuthor = async () => {
+    //     const response = await api.get(`/authors/${id}`);
+    //     return response.data;
+    // }
+    const deleteAuthorHandler = () => {
+        axios.delete("http://localhost:5000/authors/" + id)
+        .then(setRedirect("/authors"));
     }
     useEffect(() => {
-        const getAuthor = async () => {
-            const author = await retrieveAuthor();
-            if (author) setAuthor(author);
-        }
-        getAuthor()
+        axios.get("http://localhost:5000/authors/" + id)
+            .then(res => {
+                setAuthor(res.data);
+            })
+        // const getAuthor = async () => {
+        //     const author = await retrieveAuthor();
+        //     if (author) setAuthor(author);
+        // }
+        // getAuthor()
     }, [])
 
     if (redirect) {
@@ -48,69 +56,78 @@ const Author = (props) => {
             <Toolbar/>
             {author ? 
             <Box sx={{width: '95%', display: 'flex'}} m="20px auto" container>
-                <Stack sx={{textAlign: 'center', width: "25%"}}>
-                    <div style={{textAlign: 'left'}}>
-                        <Link to="/authors">
-                            <Button variant="outlined" startIcon={<ArrowBackIcon/>}>ফিরে যান</Button>
-                        </Link>
-                    </div>
-                    <h1 style={{marginBottom: "0px"}}>{author['name']}</h1>
-                    {
-                        author['pseudonym'] ? <h1 style={{marginTop: "0px", marginBottom: "0px"}}>{ "(" + author['pseudonym'] + ")"}</h1> : ""
-                    }
-                    <Typography variant="p">{author['textbookWritings']}</Typography>
-                    <div>
-                        <img style={{maxWidth: '100%', maxHeight: '350px'}} src={author['imageUrl']}/>
-                    </div>
-                    <Typography sx={{marginBottom:'20px'}} variant="p">{banglaLifespan(author)}</Typography>
-                    {author['birthPlace']?
-                    <Stack direction="row" spacing={1}>
-                        <Typography sx={{marginLeft: '10px',fontWeight: 700}} variant="body2">জন্মস্থানঃ </Typography>
-                        <Typography sx={{textAlign: "left"}} variant="body2">{author['birthPlace']}</Typography>
-                    </Stack>:
-                    ""}
-                    {author['deathPlace']?
-                    <Stack direction="row" spacing={1}>
-                        <Typography sx={{marginLeft: '10px',fontWeight: 700}} variant="body2">মৃত্যুস্থানঃ </Typography>
-                        <Typography sx={{textAlign: "left"}} variant="body2">{author['deathPlace']}</Typography>
-                    </Stack>:
-                    ""}
-                    {author['fatherName']?
-                    <Stack direction="row" spacing={1}>
-                        <Typography sx={{marginLeft: '10px',fontWeight: 700}} variant="body2">পিতার নামঃ </Typography>
-                        <Typography sx={{textAlign: "left"}} variant="body2">{author['fatherName']}</Typography>
-                    </Stack>:
-                    ""}
-                    {author['motherName']?
-                    <Stack direction="row" spacing={1}>
-                        <Typography sx={{marginLeft: '10px',fontWeight: 700}} variant="body2">মাতার নামঃ </Typography>
-                        <Typography sx={{textAlign: "left"}} variant="body2">{author['motherName']}</Typography>
-                    </Stack>:
-                    ""}
-                </Stack>
-                <Box style={{textAlign:'center',flexGrow: 1}}>
+                <Card sx={{ maxWidth: 345 }}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                        {author['name']}
+                        </Typography>
+                        <img style={{maxWidth:'95%', maxHeight:'400px'}} src={author['imageUrl']}/>
+                        <TableContainer>
+                            <Table sx={{width:'100%', margin:'0'}}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell colspan={2} sx={{textAlign:'center'}}>{banglaLifespan(author)}</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {author['pseudonym'] ? 
+                                        <TableRow>
+                                            <TableCell sx={{textAlign:'left'}}>অন্য নামঃ</TableCell>
+                                            <TableCell sx={{textAlign:'left'}}>{author['pseudonym']}</TableCell>
+                                        </TableRow>
+                                    :""}
+                                    {author['birthPlace'] ? 
+                                        <TableRow>
+                                            <TableCell sx={{textAlign:'left'}}>জন্মস্থানঃ</TableCell>
+                                            <TableCell sx={{textAlign:'left'}}>{author['birthPlace']}</TableCell>
+                                        </TableRow>
+                                    :""}
+                                    {author['deathPlace'] ? 
+                                        <TableRow>
+                                            <TableCell sx={{textAlign:'left'}}>মৃত্যুস্থানঃ</TableCell>
+                                            <TableCell sx={{textAlign:'left'}}>{author['deathPlace']}</TableCell>
+                                        </TableRow>
+                                    :""}
+                                    {author['fatherName'] ? 
+                                        <TableRow>
+                                            <TableCell sx={{textAlign:'left'}}>পিতার নামঃ</TableCell>
+                                            <TableCell sx={{textAlign:'left'}}>{author['fatherName']}</TableCell>
+                                        </TableRow>
+                                    :""}
+                                    {author['motherName'] ? 
+                                        <TableRow>
+                                            <TableCell sx={{textAlign:'left'}}>মাতার নামঃ</TableCell>
+                                            <TableCell sx={{textAlign:'left'}}>{author['motherName']}</TableCell>
+                                        </TableRow>
+                                    :""}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </CardContent>
+                </Card>
+                <Box style={{textAlign:'center',marginLeft:"20px",flexGrow: 1}}>
                     <div style={{textAlign:'right'}}>
-                        <Link to={`/authors/${author['id']}/edit`}>
+                        <Link to={`/authors/${author['_id']}/edit`}>
                             <Button variant="outlined" sx={{marginRight: "20px"}} startIcon={<EditIcon />}>পরিবর্তন করুন</Button>
                         </Link>
                         <Button onClick={deleteAuthorHandler} variant="outlined" color="error" startIcon={<DeleteIcon />}>মুছে দিন</Button>
                     </div>
-                    {author['infos'] ?
+                    {author['infos'].length > 0 ?
                     <div style={{marginBottom: '40px'}}>
-                        <Typography variant="h4">তথ্য</Typography> 
+                        <Typography variant="h4" sx={{marginBottom: '20px', textAlign: 'left'}}>তথ্য</Typography> 
                         {author['infos'].map((info, index) => {
                             return (
                             <Stack direction="row">
-                                <Typography sx={{marginRight: '10px',fontWeight: 700}} variant="h6">{englishToBanglaNumber((index+1).toString()) + "."}</Typography>
-                                <Typography style={{textAlign:'left'}} variant="h6">{info}</Typography>
+                                <Typography sx={{marginRight: '10px',fontWeight: 700}} variant="p">{englishToBanglaNumber((index+1).toString()) + "."}</Typography>
+                                <Typography style={{textAlign:'left'}} variant="p">{info}</Typography>
                             </Stack>
                             )
                         })}
                     </div>
                     : ""}
-                    {author['educations'] ? 
+                    {author['educations'].length > 0 ? 
                     <div style={{marginBottom: '40px'}}>
-                        <Typography sx={{marginBottom: "20px"}} variant="h4">শিক্ষাসমূহ</Typography>
+                        <Typography sx={{marginBottom: "20px", textAlign: 'left'}} variant="h4">শিক্ষাসমূহ</Typography>
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
@@ -138,9 +155,9 @@ const Author = (props) => {
                         </TableContainer>
                     </div>
                     : ""}
-                    {author['jobs'] ? 
+                    {author['jobs'].length > 0 ?
                     <div style={{marginBottom: '40px'}}>
-                        <Typography sx={{marginBottom: "20px"}} variant="h4">কর্মসমূহ</Typography>
+                        <Typography sx={{marginBottom: "20px", textAlign: 'left'}} variant="h4">কর্মসমূহ</Typography>
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
@@ -166,9 +183,9 @@ const Author = (props) => {
                         </TableContainer>
                     </div>
                     : ""}
-                    {author['writings'] ? 
+                    {author['writings'].length > 0 ?
                     <div style={{marginBottom: '40px'}}>
-                        <Typography sx={{marginBottom: "20px"}} variant="h4">লেখাসমূহ</Typography>
+                        <Typography sx={{marginBottom: "20px", textAlign: 'left'}} variant="h4">লেখাসমূহ</Typography>
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>
@@ -194,9 +211,9 @@ const Author = (props) => {
                         </TableContainer>
                     </div>
                     : ""}
-                    {author['awards'] ? 
+                    {author['awards'].length > 0 ?
                     <div style={{marginBottom: '40px'}}>
-                        <Typography sx={{marginBottom: "20px"}} variant="h4">পদকসমূহ</Typography>
+                        <Typography sx={{marginBottom: "20px", textAlign: 'left'}} variant="h4">পদকসমূহ</Typography>
                         <TableContainer component={Paper}>
                             <Table>
                                 <TableHead>

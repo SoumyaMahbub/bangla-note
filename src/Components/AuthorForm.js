@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Stack from "@mui/material/Stack";
 import englishToBanglaNumber from "../functions/englishToBanglaNumber";
 import banglaToEnglishNumber from "../functions/banglaToEnglishNumber";
-import api from "../api/data";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import $ from "jquery";
@@ -18,7 +18,14 @@ const AuthorForm = () => {
     const generatedQuestions = [];
     const generatedOptions = [];
     const { id } = useParams();
-    const [author, setAuthor] = useState({});
+    const [author, setAuthor] = useState({
+        infos: [],
+        questions: [],
+        writings: [],
+        educations: [],
+        jobs: [],
+        awards: []
+    });
     const [redirect, setRedirect] = useState(false);
     const [educationsCounter, setEducationsCounter] = useState(0);
     const [jobsCounter, setJobsCounter] = useState(0);
@@ -27,57 +34,53 @@ const AuthorForm = () => {
     const [awardsCounter, setAwardsCounter] = useState(0);
     const [infosCounter, setInfosCounter] = useState(0);
 
-    const addAuthorHandler = async (author) => {
-        console.log(author);
-        const response = await api.post("/authors", author);
-        setRedirect("/authors");
+    const addAuthorHandler = (author) => {
+        axios.post("http://localhost:5000/authors/add", author)
+            .then(setRedirect("/authors"))
     };
-    const addOptionHandler = async (option) => {
-        const response = await api.post("/options", option);
+    const addOptionHandler = (option) => {
+        axios.post(`http://localhost:5000/options/add`, option)
     };
-    const editAuthorHandler = async (author) => {
-        const response = await api.put(`/authors/${author.id}`, author);
-        setRedirect(`/authors/${author.id}`);
+    const editAuthorHandler = (author) => {
+        axios.put(`http://localhost:5000/authors/${author['_id']}`, author)
+            .then(setRedirect(`/authors/${author['_id']}`))
     };
 
-    const retrieveAuthor = async () => {
-        const response = await api.get(`/authors/${id}`);
-        return response.data;
+    const retrieveAuthor = () => {
+        axios.get(`http://localhost:5000/authors/${id}`)
+            .then(res => setAuthor(res.data))
     };
-    const retrieveAllOptions = async () => {
-        const response = await api.get(`/options`);
-        return response.data;
-    };
-    const getAllOptions = async () => {
-        const options = await retrieveAllOptions();
-        if (options) setOptions(options);
+    const retrieveAllOptions = () => {
+        axios.get(`http://localhost:5000/options`)
+            .then(res => setOptions(res.data))
     };
     useEffect(() => {
         if (id) {
-            const getAuthor = async () => {
-                const author = await retrieveAuthor();
-                if (author) {
-                    if (author["educations"]) {
-                        setEducationsCounter(author["educations"].length);
+            axios.get(`http://localhost:5000/authors/${id}`)
+                .then(res => {
+                    const author = res.data;
+                    if (author) {
+                        if (author["educations"]) {
+                            setEducationsCounter(author["educations"].length);
+                        }
+                        if (author["writings"]) {
+                            setWritingsCounter(author["writings"].length);
+                        }
+                        if (author["awards"]) {
+                            setAwardsCounter(author["awards"].length);
+                        }
+                        if (author["infos"]) {
+                            setInfosCounter(author["infos"].length);
+                        }
+                        if (author["jobs"]) {
+                            setJobsCounter(author["jobs"].length);
+                        }
+                        setAuthor(author);
                     }
-                    if (author["writings"]) {
-                        setWritingsCounter(author["writings"].length);
-                    }
-                    if (author["awards"]) {
-                        setAwardsCounter(author["awards"].length);
-                    }
-                    if (author["infos"]) {
-                        setInfosCounter(author["infos"].length);
-                    }
-                    if (author["jobs"]) {
-                        setJobsCounter(author["jobs"].length);
-                    }
-                    setAuthor(author);
-                }
-            };
-            getAuthor();
+                    setAuthor(res.data);
+                })
         }
-        getAllOptions();
+        retrieveAllOptions();
     }, []);
 
     if (redirect) {
@@ -264,7 +267,7 @@ const AuthorForm = () => {
                             education["degree"] +
                             " পাশ করেন?",
                         education["place"],
-                        "place"
+                        "educationPlace"
                     );
                 }
                 if (education["degree"] && education["year"]) {
@@ -295,7 +298,7 @@ const AuthorForm = () => {
                         education["year"] +
                         " সালে কোন স্থান হতে পাশ করেন?",
                         education["place"],
-                        "place"
+                        "educationPlace"
                     )
                     makeQuestion(
                         author["name"],
@@ -309,7 +312,7 @@ const AuthorForm = () => {
                 }
             });
         }
-        if (author['jobs']) {
+        if (author['jobs'] > 0) {
             const firstJob = author['jobs'][0]['name'];
             let sameJob = true;
             author['jobs'].forEach((job) => {
@@ -335,16 +338,16 @@ const AuthorForm = () => {
             }
         }
         if (author["writings"]) {
-            const writingnames = [];
-            author['writings'].forEach((writing, idx) => {
-                writingnames[idx] = writing['name']
-            })
-            makeQuestion(
-                author['name'],
-                "নিচের কোনটি " + author['name'] + " এর লেখা?",
-                writingnames,
-                "writingName"
-            )
+            // const writingnames = [];
+            // author['writings'].forEach((writing, idx) => {
+            //     writingnames[idx] = writing['name']
+            // })
+            // makeQuestion(
+            //     author['name'],
+            //     "নিচের কোনটি " + author['name'] + " এর লেখা?",
+            //     writingnames,
+            //     "writingName"
+            // )
             author["writings"].forEach((writing) => {
                 makeQuestion(
                     author['name'],
@@ -406,7 +409,7 @@ const AuthorForm = () => {
     };
     const cutAuthor = () => {
         let modifiedAuthor = {...author}
-        if(modifiedAuthor['educations']) {
+        if(modifiedAuthor['educations'].length > 0) {
             if (Object.keys(modifiedAuthor['educations'][0]).length === 0) {
                 delete modifiedAuthor['educations']
             } else {
@@ -417,7 +420,7 @@ const AuthorForm = () => {
                 })
             }
         } 
-        if (modifiedAuthor['jobs']) {
+        if (modifiedAuthor['jobs'].length > 0) {
             if (Object.keys(modifiedAuthor['jobs'][0]).length === 0) {
                 delete modifiedAuthor['jobs']
             } else {
@@ -428,7 +431,7 @@ const AuthorForm = () => {
                 })
             }
         }
-        if (modifiedAuthor['writings']) {
+        if (modifiedAuthor['writings'].length > 0) {
             if (Object.keys(modifiedAuthor['writings'][0]).length === 0) {
                 delete modifiedAuthor['writings']
             } else {
@@ -439,7 +442,7 @@ const AuthorForm = () => {
                 })
             }
         }
-        if (modifiedAuthor['awards']) {
+        if (modifiedAuthor['awards'].length > 0) {
             if (Object.keys(modifiedAuthor['awards'][0]).length === 0) {
                 delete modifiedAuthor['awards']
             } else {
@@ -450,7 +453,7 @@ const AuthorForm = () => {
                 })
             }
         }
-        if (modifiedAuthor['infos']) {
+        if (modifiedAuthor['infos'].length > 0) {
             if (Object.keys(modifiedAuthor['infos'][0]).length === 0) {
                 delete modifiedAuthor['infos']
             } else {
@@ -551,7 +554,12 @@ const AuthorForm = () => {
                     splittedId[1].charAt(0).toUpperCase() +
                     splittedId[1].slice(1);
             }
-            if (!isNaN(e.target.value)) {
+            if (e.target.id == "birth-day-input" ||
+                e.target.id == "birth-month-input" ||
+                e.target.id == "birth-year-input" ||
+                e.target.id == "death-day-input" ||
+                e.target.id == "death-month-input" ||
+                e.target.id == "death-year-input") {
                 value = englishToBanglaNumber(e.target.value);
             }
             updateKeyValuesOfAuthor(keyName, value);
@@ -652,6 +660,7 @@ const AuthorForm = () => {
                             id="birth-day-input"
                             label="দিন"
                             type="number"
+                            onWheel={event => { event.preventDefault(); }}
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}

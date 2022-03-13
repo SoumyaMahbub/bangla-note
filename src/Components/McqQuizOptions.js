@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import api from "../api/data.js";
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { Button, Toolbar } from '@mui/material';
@@ -8,16 +7,13 @@ import $ from 'jquery';
 import CheckIcon from '@mui/icons-material/Check';
 import ToggleButton from '@mui/material/ToggleButton';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const McqQuizOptions = () => {
     const [selected, setSelected] = React.useState(true);
     const [authors, setAuthors] = useState([]);
     const [selectedAuthors, setSelectedAuthors] = useState([]);
     const [selectedAuthorNames, setSelectedAuthorNames] = useState([]);
-    const retrieveAuthors = async () => {
-        const response = await api.get("/authors");
-        return response.data;
-    }    
     
     const selectAllAuthors = (authors) => {
         authors.forEach(author => {
@@ -27,14 +23,8 @@ const McqQuizOptions = () => {
     }
 
     useEffect(() => {
-        const getAllAuthors = async () => {
-            const authors = await retrieveAuthors();
-            if (authors) { 
-                selectAllAuthors(authors);
-                setAuthors(authors) 
-            };
-        }   
-        getAllAuthors();
+       axios.get("http://localhost:5000/authors")
+        .then(res => setAuthors(res.data))
     }, [])
 
     const handleChange = (e) => {

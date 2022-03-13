@@ -13,7 +13,7 @@ import {
 const NavBar = () => {
     return (
         <div>
-            <AppBar position="fixed" sx={{ width: `calc(100% - 240px)`, ml: `240px` }}>
+            <AppBar position="fixed" sx={{ width: `calc(100% - 240px)`}}>
                 <Toolbar>
                     <Box sx={{ flexGrow: 1, textAlign: 'left'}}>
                         <Switch>

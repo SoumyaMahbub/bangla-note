@@ -1,38 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import Toolbar from '@mui/material/Toolbar';
 import Box from "@mui/material/Box";
-import api from "../api/data.js";
+import axios from "axios";
 import AuthorQuestionsCard from './AuthorQuestionsCard';
 import Typography from '@mui/material/Typography';
+import LinearProgress from '@mui/material/LinearProgress';
 
 const Questions = () => {
-    const [totalQuestions, setTotalQuestion] = useState(false);
+    const [totalQuestions, setTotalQuestions] = useState(0);
     const [authors, setAuthors] = useState();
-    const retrieveAuthors = async () => {
-        const response = await api.get("/authors");
-        return response.data;
-    };  
     useEffect(() => {
-        const getAllAuthors = async () => {
-            const authors = await retrieveAuthors();
+        let counter = 0;
+        axios.get("http://localhost:5000/authors")
+        .then(res => { 
+            const authors = res.data;
             if (authors) {
-                let counter = 0;
                 authors.forEach(author => {
                     counter += author['questions'].length;
                 })
-                setTotalQuestion(counter);
+                setTotalQuestions(counter);
                 setAuthors(authors);
             };
-        }
-        getAllAuthors();
+            setAuthors(res.data)
+        })
     }, [])
     return (
-        <Box sx={{width: "95%"}} m="30px auto">
+        <Box>
             <Toolbar/>
-            {authors ? authors.map(author => {
-                return <AuthorQuestionsCard key={author.id} author={author}></AuthorQuestionsCard>
-            }): ""}
-            <Typography sx={{marginTop: "20px"}}>Total Questions: {totalQuestions}</Typography>
+            {authors ? "" : <LinearProgress/>}
+            <Box sx={{width:'95%'}} m="0 auto">
+                {authors ? authors.map(author => {
+                    return <AuthorQuestionsCard key={author['_id']} author={author}></AuthorQuestionsCard>
+                }): ""}
+                <Typography sx={{marginTop: "20px"}}>Total Questions: {totalQuestions}</Typography>
+            </Box>
         </Box>
     )
 }

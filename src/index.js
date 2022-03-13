@@ -2,8 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import store from "./app/store";
-import { Provider } from "react-redux";
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -11,11 +9,9 @@ import '@fontsource/roboto/700.css';
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-	<Provider store={store}>
-		<React.StrictMode>
-			<App />
-		</React.StrictMode>
-	</Provider>,
+	<React.StrictMode>
+		<App />
+	</React.StrictMode>,
 	document.getElementById("root")
 );
 
