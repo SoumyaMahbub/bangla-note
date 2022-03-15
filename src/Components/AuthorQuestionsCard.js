@@ -38,46 +38,52 @@ const AuthorQuestionsCard = (props) => {
     };
 
     const editAuthorHandler = () => {
-        const editedAuthor = { ...props.author };
-        editedAuthor["questions"].push(questionObj);
-        axios.put(
-            `http://localhost:5000/authors/${editedAuthor["_id"]}`,
-            editedAuthor
-        );
-        // const response = await api.get(`/options`);
-        // const options = response.data;
-        axios.get("http://localhost:5000/options").then((res) => {
-            const options = res.data;
-            const matchedOption = options.filter(
-                (option) =>
-                    option.type === questionObj["optionType"] &&
-                    option.option === questionObj["answer"]
+        console.log(questionObj);
+        if (questionObj.question == "" || questionObj.answer == "" || questionObj.optionType == "") {
+            alert("সকল ঘর পূর্ণ করতে হবে")
+        } else {      
+            const editedAuthor = { ...props.author };
+            editedAuthor["questions"].push(questionObj);
+            axios.put(
+                `http://localhost:5000/authors/${editedAuthor["_id"]}`,
+                editedAuthor
             );
-            if (!matchedOption.length) {
-                if (
-                    banglaToEnglishNumber(questionObj["answer"]) &&
-                    questionObj["answer"].length == 4
-                ) {
-                    const optionObjOne = {
-                        type: "year",
-                        option: questionObj["answer"],
-                    };
-                    const optionObjTwo = {
-                        type: "date",
-                        option: questionObj["answer"],
-                    };
-                    axios.post(`http://localhost:5000/options`, optionObjOne);
-                    axios.post(`http://localhost:5000/options`, optionObjTwo);
-                } else {
-                    const optionObj = {
-                        type: questionObj["optionType"],
-                        option: questionObj["answer"],
-                    };
-                    axios.post(`http://localhost:5000/options`, optionObj);
+            // const response = await api.get(`/options`);
+            // const options = response.data;
+            axios.get("http://localhost:5000/options").then((res) => {
+                const options = res.data;
+                const matchedOption = options.filter(
+                    (option) =>
+                        option.type === questionObj["optionType"] &&
+                        option.option === questionObj["answer"]
+                );
+                if (!matchedOption.length) {
+                    if (
+                        banglaToEnglishNumber(questionObj["answer"]) &&
+                        questionObj["answer"].length == 4
+                    ) {
+                        const optionObjOne = {
+                            type: "year",
+                            option: questionObj["answer"],
+                        };
+                        const optionObjTwo = {
+                            type: "date",
+                            option: questionObj["answer"],
+                        };
+                        axios.post(`http://localhost:5000/options`, optionObjOne);
+                        axios.post(`http://localhost:5000/options`, optionObjTwo);
+                    } else {
+                        const optionObj = {
+                            type: questionObj["optionType"],
+                            option: questionObj["answer"],
+                        };
+                        axios.post(`http://localhost:5000/options`, optionObj);
+                    }
                 }
-            }
-            setRedirect("/questions");
-        });
+                setModalOpen(false);
+                props.updateRefresher();
+            });
+        }
     };
 
     if (redirect) {
@@ -94,17 +100,6 @@ const AuthorQuestionsCard = (props) => {
                 return { ...prevState };
             }
         });
-    };
-
-    const addQuestionHandler = () => {
-        if (
-            $("#question-input").val() === "" ||
-            $("#answer-input").val() === "" ||
-            $("#optionType-input").val() === ""
-        ) {
-            alert("all the fields must be filled");
-        } else {
-        }
     };
 
     return (
@@ -127,6 +122,7 @@ const AuthorQuestionsCard = (props) => {
                                       questionId={idx}
                                       key={idx}
                                       questionObj={questionObj}
+                                      updateRefresher={props.updateRefresher}
                                   ></QuestionAccordion>
                               );
                           })

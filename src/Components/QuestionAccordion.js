@@ -21,7 +21,7 @@ const QuestionAccordion = (props) => {
         const editedAuthor = {...props.author};
         editedAuthor['questions'].splice(props.questionId, 1);
         axios.put(`http://localhost:5000/authors/${editedAuthor['_id']}`, editedAuthor)
-            .then(setRedirect('/questions'))
+            .then(props.updateRefresher)
     };
 
     if (redirect) {

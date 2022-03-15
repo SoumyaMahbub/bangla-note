@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Toolbar from '@mui/material/Toolbar';
 import Button from "@mui/material/Button";
 import Typography from '@mui/material/Typography';
@@ -23,6 +21,7 @@ import { Redirect, useParams } from 'react-router';
 import banglaLifespan from '../functions/banglaLifespan.js';
 import englishToBanglaNumber from '../functions/englishToBanglaNumber.js';
 import { Link } from 'react-router-dom';
+import { LinearProgress } from '@mui/material';
 const Author = (props) => {
     const { id } = useParams();
     const [author, setAuthor] = useState();
@@ -40,11 +39,6 @@ const Author = (props) => {
             .then(res => {
                 setAuthor(res.data);
             })
-        // const getAuthor = async () => {
-        //     const author = await retrieveAuthor();
-        //     if (author) setAuthor(author);
-        // }
-        // getAuthor()
     }, [])
 
     if (redirect) {
@@ -53,7 +47,6 @@ const Author = (props) => {
 
     return (
         <Box>
-            <Toolbar/>
             {author ? 
             <Box sx={{width: '95%', display: 'flex'}} m="20px auto" container>
                 <Card sx={{ maxWidth: 345 }}>
@@ -66,7 +59,7 @@ const Author = (props) => {
                             <Table sx={{width:'100%', margin:'0'}}>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell colspan={2} sx={{textAlign:'center'}}>{banglaLifespan(author)}</TableCell>
+                                        <TableCell colSpan={2} sx={{textAlign:'center'}}>{banglaLifespan(author)}</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -115,10 +108,10 @@ const Author = (props) => {
                     {author['infos'].length > 0 ?
                     <div style={{marginBottom: '40px'}}>
                         <Typography variant="h4" sx={{marginBottom: '20px', textAlign: 'left'}}>তথ্য</Typography> 
-                        {author['infos'].map((info, index) => {
+                        {author['infos'].map((info, idx) => {
                             return (
-                            <Stack direction="row">
-                                <Typography sx={{marginRight: '10px',fontWeight: 700}} variant="p">{englishToBanglaNumber((index+1).toString()) + "."}</Typography>
+                            <Stack key={idx} direction="row">
+                                <Typography sx={{marginRight: '10px',fontWeight: 700}} variant="p">{englishToBanglaNumber((idx+1).toString()) + "."}</Typography>
                                 <Typography style={{textAlign:'left'}} variant="p">{info}</Typography>
                             </Stack>
                             )
@@ -139,9 +132,9 @@ const Author = (props) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {author['educations'].map((education) => {
+                                    {author['educations'].map((education, idx) => {
                                         return (
-                                            <TableRow>
+                                            <TableRow key={idx}>
                                                 <TableCell>{education['degree'] ? education['degree'] : "--------" }</TableCell>
                                                 <TableCell>{education['topic'] ? education['topic'] : "--------" }</TableCell>
                                                 <TableCell>{education['place'] ? education['place'] : "--------" }</TableCell>
@@ -168,9 +161,9 @@ const Author = (props) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {author['jobs'].map((jobs) => {
+                                    {author['jobs'].map((jobs, idx) => {
                                         return (
-                                            <TableRow>
+                                            <TableRow key={idx}>
                                                 <TableCell>{jobs['name'] ? jobs['name'] : "--------" }</TableCell>
                                                 <TableCell>{jobs['place'] ? jobs['place'] : "--------" }</TableCell>
                                                 <TableCell>{jobs['year'] ? jobs['year'] : "--------" }</TableCell>
@@ -196,9 +189,9 @@ const Author = (props) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {author['writings'].map((writing) => {
+                                    {author['writings'].map((writing, idx) => {
                                         return (
-                                            <TableRow>
+                                            <TableRow key={idx}>
                                                 <TableCell>{writing['name'] ? writing['name'] : "--------" }</TableCell>
                                                 <TableCell>{writing['type'] ? writing['type'] : "--------" }</TableCell>
                                                 <TableCell>{writing['year'] ? writing['year'] : "--------" }</TableCell>
@@ -224,9 +217,9 @@ const Author = (props) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {author['awards'].map((award) => {
+                                    {author['awards'].map((award, idx) => {
                                         return (
-                                            <TableRow>
+                                            <TableRow key={idx}>
                                                 <TableCell>{award['name'] ? award['name'] : "--------" }</TableCell>
                                                 <TableCell>{award['year'] ? award['year'] : "--------" }</TableCell>
                                                 <TableCell>{award['reason'] ? award['reason'] : "--------" }</TableCell>
@@ -241,7 +234,7 @@ const Author = (props) => {
                     : ""}
                 </Box>
             </Box>:
-            ""
+            <LinearProgress/>
             }
         </Box>
     )

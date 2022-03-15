@@ -71,7 +71,7 @@ const SideBar = () => {
                             ></ListItemText>
                         </ListItem>
                     </Link>
-                    <Link to="/quiz">
+                    <Link to="/mcq-quiz-options">
                         <ListItem button>
                             <ListItemIcon>
                                 <QuizIcon />

@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 const Quiz = () => {
     return (
         <Box sx={{marginTop: "100px"}}>
-            <Toolbar/>
             <Stack sx={{width: "75%", margin: "auto"}} spacing={2}>
                 <Typography variant="h3" sx={{marginBottom: "30px"}}>কোন ধরণের কুইজে অংশ নিতে চান?</Typography>
                 <Link to="/mcq-quiz-options">

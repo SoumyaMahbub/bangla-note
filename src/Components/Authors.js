@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Toolbar from "@mui/material/Toolbar";
-
+import LinearProgress from '@mui/material/LinearProgress';
 import axios from 'axios';
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -17,7 +17,7 @@ const Authors = () => {
     }, [])
     return (
         <Box>
-            <Toolbar />
+            {authors ? "" : <LinearProgress/>}
             <Grid sx={{width: '90%'}} m="50px auto" container spacing={2}>
                 {authors ? authors.map((author) => {
                     const lifespan = banglaLifespan(author);

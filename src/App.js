@@ -18,6 +18,7 @@ import {
   } from "react-router-dom";
 import McqQuiz from "./Components/McqQuiz";
 import McqQuizOptions from "./Components/McqQuizOptions";
+import { Toolbar } from "@mui/material";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
 				<SideBar/>
 				<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
 					<NavBar/>
+					<Toolbar/>
 					<Switch>
 						<Route key="edit-author" path="/authors/:id/edit">
 							<AuthorForm />	
@@ -49,14 +51,14 @@ function App() {
 						<Route path="/questions">
 							<Questions />
 						</Route>
-						<Route path="/quiz">
+						{/* <Route path="/quiz">
 							<Quiz />
+						</Route> */}
+						<Route path="/mcq-quiz-options">
+							<McqQuizOptions />
 						</Route>
 						<Route path="/mcq-quiz">
 							<McqQuiz />
-						</Route>
-						<Route path="/mcq-quiz-options">
-							<McqQuizOptions />
 						</Route>
 						<Route key="add-author" path="/add-author">
 							<AuthorForm />

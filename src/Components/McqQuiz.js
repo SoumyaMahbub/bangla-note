@@ -47,7 +47,7 @@ const McqQuiz = () => {
         p: 4,
     };
 
-    const retrieveAuthorsAndOptions = async (authors) => {
+    const retrieveAuthorsAndOptions = (authors) => {
         let tempQuestions = [];
         authors.forEach(authorObj => {
             tempQuestions = [...tempQuestions, ...authorObj['questions']];
@@ -130,15 +130,13 @@ const McqQuiz = () => {
     }
 
     useEffect(() => {
-        const getAllAuthorsAndOptions = async () => {
-            const authors = location.authors;
-            setAuthors(authors);
-            if (!authors) {
-                return
-            }
-            await retrieveAuthorsAndOptions(authors);
+        console.log(location); 
+        const authors = location.state;
+        setAuthors(authors);
+        if (!authors) {
+            return
         }
-        getAllAuthorsAndOptions();
+        retrieveAuthorsAndOptions(authors);
     }, []);
 
     if (!authors) {
@@ -146,7 +144,6 @@ const McqQuiz = () => {
     }
     return (
         <Box>
-            <Toolbar/>
             <Card variant="outlined" sx={{ width: "70%", margin: "50px auto 20px auto"}}>
                 <CardContent sx={{width:"90%", margin: "10px auto 0px auto"}}>
                     <Typography variant="h6" sx={{textAlign:'left', marginBottom: "20px"}} component="div">

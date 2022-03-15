@@ -14,7 +14,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import numberToBanglaMonth from "../functions/numberToBanglaMonth";
 
 const AuthorForm = () => {
-    const history = useHistory();
     const generatedQuestions = [];
     const generatedOptions = [];
     const { id } = useParams();
@@ -612,7 +611,6 @@ const AuthorForm = () => {
 
     return (
         <Box sx={{ width: "95%" }} m="auto">
-            <Toolbar />
             {id ? (
                 <div style={{ textAlign: "left", marginTop: "20px" }}>
                     <Link to={`/authors/${id}`}>

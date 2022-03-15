@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Button, Toolbar } from '@mui/material';
+import { Button, LinearProgress, Toolbar } from '@mui/material';
 import $ from 'jquery';
 import CheckIcon from '@mui/icons-material/Check';
 import ToggleButton from '@mui/material/ToggleButton';
-import { Link } from 'react-router-dom';
+import { Redirect } from "react-router";
 import axios from 'axios';
 
 const McqQuizOptions = () => {
-    const [selected, setSelected] = React.useState(true);
+    const [redirect, setRedirect] = React.useState(false);
+    const [selected, setSelected] = React.useState(false);
     const [authors, setAuthors] = useState([]);
     const [selectedAuthors, setSelectedAuthors] = useState([]);
     const [selectedAuthorNames, setSelectedAuthorNames] = useState([]);
@@ -38,17 +39,19 @@ const McqQuizOptions = () => {
             setSelectedAuthors(prevState=> [...prevState, authors.find(author => author.name === authorName)]);
         }
     }
+    if (redirect) {
+        return <Redirect to={{pathname: redirect, state: selectedAuthors}} />;
+    }
 
     return (
         <div>
-            <Box>
-                <Toolbar />
-                {authors ? authors.map((author) => {
-                    return <FormControlLabel id={author.name} label={author.name} control={<Checkbox checked={selectedAuthorNames.includes(author.name)} onChange={handleChange}/>} />
+            <Box sx={{mt: "20px"}}>
+                {authors ? authors.map((author, idx) => {
+                    return <FormControlLabel key={idx} id={author.name} label={author.name} control={<Checkbox checked={selectedAuthorNames.includes(author.name)} onChange={handleChange}/>} />
                 }): ""}
             </Box>
             <ToggleButton
-                value="check"
+                value="uncheck"
                 selected={selected}
                 sx = {{mr: "20px"}}
                 onChange={() => {
@@ -63,12 +66,13 @@ const McqQuizOptions = () => {
                 >
                 <CheckIcon />
             </ToggleButton>
-            <Link to={{
-                 pathname: "/mcq-quiz",
-                 authors: selectedAuthors
-            }}>
-                <Button variant="contained">Start Quiz</Button>
-            </Link>       
+            <Button variant = "contained" onClick={() => {
+                if (selectedAuthors.length == 0) {
+                    alert('অনুরোধ করে অন্তত একটি লেখক নির্বাচন করুন');
+                } else {
+                    setRedirect('/mcq-quiz')
+                }
+            }}>শুরু করুন</Button>
         </div>
     )
 }
