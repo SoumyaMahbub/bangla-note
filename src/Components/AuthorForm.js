@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import TextField from "@mui/material/TextField";
-import Toolbar from "@mui/material/Toolbar";
 import Stack from "@mui/material/Stack";
 import englishToBanglaNumber from "../functions/englishToBanglaNumber";
 import banglaToEnglishNumber from "../functions/banglaToEnglishNumber";
@@ -12,12 +11,28 @@ import { useHistory, Link } from "react-router-dom";
 import { useParams, Redirect } from "react-router";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import numberToBanglaMonth from "../functions/numberToBanglaMonth";
+import Divider from '@mui/material/Divider';
+import { Typography } from "@mui/material";
 
-const AuthorForm = () => {
+const AuthorForm = ({setAuthorsRefresher, setAuthorRefresher}) => {
     const generatedQuestions = [];
     const generatedOptions = [];
     const { id } = useParams();
     const [author, setAuthor] = useState({
+        name: "",
+        imageUrl: "",
+        birthDay: "",
+        birthMonth: "",
+        birthYear: "",
+        birthPlace: "",
+        deathDay: "",
+        deathMonth: "",
+        deathYear: "",
+        deathPlace: "",
+        pseudonym: "",
+        textbookWritings: "",
+        fatherName: "",
+        motherName: "",
         infos: [],
         questions: [],
         writings: [],
@@ -35,14 +50,20 @@ const AuthorForm = () => {
 
     const addAuthorHandler = (author) => {
         axios.post("http://localhost:5000/authors/add", author)
-            .then(setRedirect("/authors"))
+            .then(() => {
+                setAuthorsRefresher(prev => prev+1)
+                setRedirect("/authors")
+            })
     };
     const addOptionHandler = (option) => {
         axios.post(`http://localhost:5000/options/add`, option)
     };
     const editAuthorHandler = (author) => {
         axios.put(`http://localhost:5000/authors/${author['_id']}`, author)
-            .then(setRedirect(`/authors/${author['_id']}`))
+            .then(() => {
+                setAuthorRefresher(prev => prev+1)
+                setRedirect(`/authors/${author['_id']}`)
+            })
     };
 
     const retrieveAuthor = () => {
@@ -213,7 +234,7 @@ const AuthorForm = () => {
         if (author["pseudonym"]) {
             makeQuestion(
                 author["name"],
-                author["name"] + " এর ছদ্মনাম কি?",
+                author["name"] + " এর অন্য নাম কি?",
                 author["pseudonym"],
                 "pseudonym"
             );
@@ -510,14 +531,9 @@ const AuthorForm = () => {
 
     const updateKeyValuesOfAuthor = (key, value) => {
         setAuthor((prevState) => {
-            if (value != "") {
-                return {
-                    ...prevState,
-                    [key]: value,
-                };
-            } else {
-                delete prevState[key];
-                return { ...prevState };
+            return {
+                ...prevState,
+                [key]: value,
             }
         });
     };
@@ -610,7 +626,7 @@ const AuthorForm = () => {
     };
 
     return (
-        <Box sx={{ width: "95%" }} m="auto">
+        <Box sx={{ width: {sm: "95%", xs:"85%"} }} m="auto">
             {id ? (
                 <div style={{ textAlign: "left", marginTop: "20px" }}>
                     <Link to={`/authors/${id}`}>
@@ -625,8 +641,8 @@ const AuthorForm = () => {
             ) : (
                 ""
             )}
-            <Box sx={{ width: "75%" }} m="30px auto">
-                <Stack spacing={3}>
+            <Box sx={{ width: {sm: '85%', xs:'100%'}}} m="30px auto">
+                <Stack spacing={2}>
                     <TextField
                         id="name-input"
                         label="নাম"
@@ -653,21 +669,19 @@ const AuthorForm = () => {
                                 : ""
                         }
                     />
-                    <Stack direction="row" spacing={3}>
+                    <Typography sx={{textAlign:'left'}} variant="h6">জন্ম</Typography>
+                    <Divider sx={{display: {xs:'block',sm:'none'}}} />
+                    <Stack direction={{xs:"column", sm:"row"}} spacing={2}>
                         <TextField
                             id="birth-day-input"
                             label="দিন"
-                            type="number"
-                            onWheel={event => { event.preventDefault(); }}
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
                             value={
                                 author
                                     ? author["birthDay"]
-                                        ? banglaToEnglishNumber(
-                                              author["birthDay"]
-                                          )
+                                        ? author["birthDay"]
                                         : ""
                                     : ""
                             }
@@ -675,16 +689,13 @@ const AuthorForm = () => {
                         <TextField
                             id="birth-month-input"
                             label="মাস"
-                            type="number"
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
                             value={
                                 author
                                     ? author["birthMonth"]
-                                        ? banglaToEnglishNumber(
-                                              author["birthMonth"]
-                                          )
+                                        ? author["birthMonth"]
                                         : ""
                                     : ""
                             }
@@ -692,23 +703,20 @@ const AuthorForm = () => {
                         <TextField
                             id="birth-year-input"
                             label="সাল"
-                            type="number"
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
                             value={
                                 author
                                     ? author["birthYear"]
-                                        ? banglaToEnglishNumber(
-                                              author["birthYear"]
-                                          )
+                                        ? author["birthYear"]
                                         : ""
                                     : ""
                             }
                         />
                         <TextField
                             id="birth-place-input"
-                            label="জন্মস্থান"
+                            label="স্থান"
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
@@ -721,20 +729,19 @@ const AuthorForm = () => {
                             }
                         />
                     </Stack>
-                    <Stack direction="row" spacing={3}>
+                    <Typography sx={{textAlign:'left'}} variant="h6">মৃত্যু</Typography>
+                    <Divider sx={{display: {xs:'block',sm:'none'}}} />
+                    <Stack direction={{xs:"column", sm:"row"}} spacing={2}>
                         <TextField
                             id="death-day-input"
                             label="দিন"
-                            type="number"
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
                             value={
                                 author
                                     ? author["deathDay"]
-                                        ? banglaToEnglishNumber(
-                                              author["deathDay"]
-                                          )
+                                        ? author["deathDay"]
                                         : ""
                                     : ""
                             }
@@ -742,16 +749,13 @@ const AuthorForm = () => {
                         <TextField
                             id="death-month-input"
                             label="মাস"
-                            type="number"
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
                             value={
                                 author
                                     ? author["deathMonth"]
-                                        ? banglaToEnglishNumber(
-                                              author["deathMonth"]
-                                          )
+                                        ? author["deathMonth"]
                                         : ""
                                     : ""
                             }
@@ -759,23 +763,20 @@ const AuthorForm = () => {
                         <TextField
                             id="death-year-input"
                             label="সাল"
-                            type="number"
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
                             value={
                                 author
                                     ? author["deathYear"]
-                                        ? banglaToEnglishNumber(
-                                              author["deathYear"]
-                                          )
+                                        ? author["deathYear"]
                                         : ""
                                     : ""
                             }
                         />
                         <TextField
                             id="death-place-input"
-                            label="মৃত্যুস্থান"
+                            label="স্থান"
                             variant="outlined"
                             size="small"
                             onChange={textFieldChangeHandler}
@@ -788,6 +789,8 @@ const AuthorForm = () => {
                             }
                         />
                     </Stack>
+                    <Typography sx={{textAlign:'left'}} variant="h6">অন্যান্য</Typography>
+                    <Divider sx={{display: {xs:'block',sm:'none'}}} />
                     <TextField
                         id="textbook-writings-input"
                         label="পাঠ্যপুস্তকে রচিত লেখা"
@@ -832,7 +835,7 @@ const AuthorForm = () => {
                     />
                     <TextField
                         id="pseudonym-input"
-                        label="ছদ্মনাম"
+                        label="অন্য নাম"
                         variant="outlined"
                         size="small"
                         onChange={textFieldChangeHandler}
@@ -844,14 +847,16 @@ const AuthorForm = () => {
                                 : ""
                         }
                     />
+                    {educationsCounter>0 ? <Typography sx={{textAlign:'left'}} variant="h6">শিক্ষা</Typography> : ""}
                     {Array.from(Array(educationsCounter), (e, i) => {
                         return (
                             <Stack
                                 key={i}
                                 className="education-input-group"
-                                direction="row"
+                                direction={{xs:"column", sm:"row"}}
                                 spacing={2}
                             >
+                                <Divider sx={{display: {xs:'block',sm:'none'}}} />
                                 <TextField
                                     label="ডিগ্রি"
                                     variant="outlined"
@@ -921,7 +926,6 @@ const AuthorForm = () => {
                                 <TextField
                                     label="সাল"
                                     variant="outlined"
-                                    type="number"
                                     id={`education-year-input${i}`}
                                     size="small"
                                     onChange={textFieldChangeHandler}
@@ -932,11 +936,9 @@ const AuthorForm = () => {
                                                     ? author["educations"][i][
                                                           "year"
                                                       ]
-                                                        ? banglaToEnglishNumber(
-                                                              author[
-                                                                  "educations"
-                                                              ][i]["year"]
-                                                          )
+                                                        ?author[
+                                                            "educations"
+                                                        ][i]["year"]
                                                         : ""
                                                     : ""
                                                 : ""
@@ -968,14 +970,17 @@ const AuthorForm = () => {
                     >
                         শিক্ষা যোগ করুন
                     </Button>
+                    {jobsCounter > 0 ? <Typography sx={{textAlign:'left'}} variant="h6">কর্ম</Typography> : ""}
                     {Array.from(Array(jobsCounter), (e, i) => {
                         return (
                             <Stack
                                 key={i}
                                 className="job-input-group"
-                                direction="row"
+                                direction={{xs:"column", sm:"row"}}
                                 spacing={2}
                             >
+                                
+                                <Divider sx={{display: {xs:'block',sm:'none'}}} />
                                 <TextField
                                     label="নাম"
                                     variant="outlined"
@@ -1033,11 +1038,9 @@ const AuthorForm = () => {
                                                     ? author["jobs"][i][
                                                           "year"
                                                       ]
-                                                        ? banglaToEnglishNumber(
-                                                            author["jobs"][
+                                                        ? author["jobs"][
                                                               i
                                                           ]["year"]
-                                                        )
                                                         : ""
                                                     : ""
                                                 : ""
@@ -1068,14 +1071,16 @@ const AuthorForm = () => {
                     >
                         কর্ম যোগ করুন
                     </Button>
+                    {writingsCounter>0 ? <Typography sx={{textAlign:'left'}} variant="h6">লেখা</Typography> : ""}
                     {Array.from(Array(writingsCounter), (e, i) => {
                         return (
                             <Stack
                                 key={i}
                                 className="writing-input-group"
-                                direction="row"
+                                direction={{xs:"column", sm:"row"}}
                                 spacing={2}
                             >
+                                <Divider sx={{display: {xs:'block',sm:'none'}}} />
                                 <TextField
                                     label="নাম"
                                     variant="outlined"
@@ -1123,7 +1128,6 @@ const AuthorForm = () => {
                                 <TextField
                                     label="সাল"
                                     variant="outlined"
-                                    type="number"
                                     size="small"
                                     onChange={textFieldChangeHandler}
                                     id={`writing-year-input${i}`}
@@ -1134,9 +1138,9 @@ const AuthorForm = () => {
                                                     ? author["writings"][i][
                                                           "year"
                                                       ]
-                                                        ? banglaToEnglishNumber(author["writings"][i][
+                                                        ? author["writings"][i][
                                                               "year"
-                                                          ])
+                                                          ]
                                                         : ""
                                                     : ""
                                                 : ""
@@ -1167,14 +1171,16 @@ const AuthorForm = () => {
                     >
                         লেখা যোগ করুন
                     </Button>
+                    {awardsCounter>0 ? <Typography sx={{textAlign:'left'}} variant="h6">পদক</Typography> : ""}
                     {Array.from(Array(awardsCounter), (e, i) => {
                         return (
                             <Stack
                                 key={i}
                                 className="award-input-group"
-                                direction="row"
+                                direction={{xs:"column", sm:"row"}}
                                 spacing={2}
                             >
+                                <Divider sx={{display: {xs:'block',sm:'none'}}} />
                                 <TextField
                                     label="নাম"
                                     variant="outlined"
@@ -1200,7 +1206,6 @@ const AuthorForm = () => {
                                 <TextField
                                     label="সাল"
                                     variant="outlined"
-                                    type="number"
                                     size="small"
                                     onChange={textFieldChangeHandler}
                                     id={`award-year-input${i}`}
@@ -1211,11 +1216,9 @@ const AuthorForm = () => {
                                                     ? author["awards"][i][
                                                           "year"
                                                       ]
-                                                        ? banglaToEnglishNumber(
-                                                              author["awards"][
+                                                        ? author["awards"][
                                                                   i
                                                               ]["year"]
-                                                          )
                                                         : ""
                                                     : ""
                                                 : ""
@@ -1268,6 +1271,7 @@ const AuthorForm = () => {
                     >
                         পদক যোগ করুন
                     </Button>
+                    {infosCounter>0 ? <Typography sx={{textAlign:'left'}} variant="h6">তথ্য</Typography> : ""}
                     {Array.from(Array(infosCounter), (e, i) => {
                         return (
                             <TextField

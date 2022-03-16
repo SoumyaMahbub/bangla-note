@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -80,6 +79,12 @@ const AuthorQuestionsCard = (props) => {
                         axios.post(`http://localhost:5000/options`, optionObj);
                     }
                 }
+                setQuestionObj({
+                    authorName: props.author["name"],
+                    question: "",
+                    answer: "",
+                    optionType: "",
+                })
                 setModalOpen(false);
                 props.updateRefresher();
             });

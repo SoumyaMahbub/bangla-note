@@ -7,18 +7,18 @@ import Box from "@mui/material/Box";
 import AuthorCard from "./AuthorCard";
 import banglaLifespan from "../functions/banglaLifespan.js";
 
-const Authors = () => {
+const Authors = ({authorsRefresher}) => {
     const [authors, setAuthors] = useState()
     useEffect(() => {
         axios.get('http://localhost:5000/authors')
             .then(res => {
                 setAuthors(res.data);
             })
-    }, [])
+    }, [authorsRefresher])
     return (
         <Box>
             {authors ? "" : <LinearProgress/>}
-            <Grid sx={{width: '90%'}} m="50px auto" container spacing={2}>
+            <Grid sx={{width: '95%'}} m="20px auto" container spacing={2}>
                 {authors ? authors.map((author) => {
                     const lifespan = banglaLifespan(author);
                     return <AuthorCard key={author['_id']} authorState={author} authorId={author['_id']} lifespan={lifespan} imageUrl={author['imageUrl']} authorName={author['name']} pseudonym={author['pseudonym'] ? author['pseudonym']: ""}/>

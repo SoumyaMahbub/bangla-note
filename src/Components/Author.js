@@ -26,30 +26,43 @@ const Author = (props) => {
     const { id } = useParams();
     const [author, setAuthor] = useState();
     const [redirect, setRedirect] = useState(false);
-    // const retrieveAuthor = async () => {
-    //     const response = await api.get(`/authors/${id}`);
-    //     return response.data;
-    // }
     const deleteAuthorHandler = () => {
         axios.delete("http://localhost:5000/authors/" + id)
-        .then(setRedirect("/authors"));
+        .then(() => {
+            props.setAuthorsRefresher(prev => prev+1);
+            setRedirect("/authors")
+        });
     }
     useEffect(() => {
         axios.get("http://localhost:5000/authors/" + id)
             .then(res => {
                 setAuthor(res.data);
             })
-    }, [])
+    }, [props.authorRefresher])
 
     if (redirect) {
         return <Redirect to={redirect}/>
     }
 
+    if (!author) {
+        return <LinearProgress/>
+    } 
+
     return (
-        <Box>
-            {author ? 
-            <Box sx={{width: '95%', display: 'flex'}} m="20px auto" container>
-                <Card sx={{ maxWidth: 345 }}>
+        <Box sx={{width: {sm:'95%', xs:'85%'}, m:"20px auto"}}>
+            <Box sx={{textAlign:{sm:'left', xs: 'center{sm:'}, display:{sm:'flex'}}}>
+                <Link to="/authors">
+                    <Button sx={{display:{xs:'none',sm:'inline-flex'}}} variant="outlined" startIcon={<ArrowBackIcon />}>ফিরে যান </Button>
+                </Link>
+                <Box sx={{ml: 'auto'}}>
+                    <Link to={`/authors/${author['_id']}/edit`}>
+                        <Button variant="outlined" sx={{marginRight: "20px"}} startIcon={<EditIcon />}>পরিবর্তন করুন</Button>
+                    </Link>
+                    <Button onClick={deleteAuthorHandler} variant="outlined" color="error" startIcon={<DeleteIcon />}>মুছে দিন</Button>
+                </Box>
+            </Box>
+            <Box sx={{display: {sm:'flex'}}} mt="20px" container>
+                <Card sx={{ maxWidth: {sm: '345px'}, mb:{xs:'20px'}, mx:{xs:'auto'}}}>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
                         {author['name']}
@@ -63,31 +76,31 @@ const Author = (props) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {author['pseudonym'] ? 
+                                    {author['pseudonym'] != "" ? 
                                         <TableRow>
                                             <TableCell sx={{textAlign:'left'}}>অন্য নামঃ</TableCell>
                                             <TableCell sx={{textAlign:'left'}}>{author['pseudonym']}</TableCell>
                                         </TableRow>
                                     :""}
-                                    {author['birthPlace'] ? 
+                                    {author['birthPlace'] != ""? 
                                         <TableRow>
                                             <TableCell sx={{textAlign:'left'}}>জন্মস্থানঃ</TableCell>
                                             <TableCell sx={{textAlign:'left'}}>{author['birthPlace']}</TableCell>
                                         </TableRow>
                                     :""}
-                                    {author['deathPlace'] ? 
+                                    {author['deathPlace'] != ""? 
                                         <TableRow>
                                             <TableCell sx={{textAlign:'left'}}>মৃত্যুস্থানঃ</TableCell>
                                             <TableCell sx={{textAlign:'left'}}>{author['deathPlace']}</TableCell>
                                         </TableRow>
                                     :""}
-                                    {author['fatherName'] ? 
+                                    {author['fatherName'] != ""? 
                                         <TableRow>
                                             <TableCell sx={{textAlign:'left'}}>পিতার নামঃ</TableCell>
                                             <TableCell sx={{textAlign:'left'}}>{author['fatherName']}</TableCell>
                                         </TableRow>
                                     :""}
-                                    {author['motherName'] ? 
+                                    {author['motherName'] != ""? 
                                         <TableRow>
                                             <TableCell sx={{textAlign:'left'}}>মাতার নামঃ</TableCell>
                                             <TableCell sx={{textAlign:'left'}}>{author['motherName']}</TableCell>
@@ -98,13 +111,13 @@ const Author = (props) => {
                         </TableContainer>
                     </CardContent>
                 </Card>
-                <Box style={{textAlign:'center',marginLeft:"20px",flexGrow: 1}}>
-                    <div style={{textAlign:'right'}}>
+                <Box sx={{textAlign:'center',marginLeft:{sm:"20px",xs:"none"},flexGrow: 1}}>
+                    {/* <div style={{textAlign:'right'}}>
                         <Link to={`/authors/${author['_id']}/edit`}>
                             <Button variant="outlined" sx={{marginRight: "20px"}} startIcon={<EditIcon />}>পরিবর্তন করুন</Button>
                         </Link>
                         <Button onClick={deleteAuthorHandler} variant="outlined" color="error" startIcon={<DeleteIcon />}>মুছে দিন</Button>
-                    </div>
+                    </div> */}
                     {author['infos'].length > 0 ?
                     <div style={{marginBottom: '40px'}}>
                         <Typography variant="h4" sx={{marginBottom: '20px', textAlign: 'left'}}>তথ্য</Typography> 
@@ -233,9 +246,7 @@ const Author = (props) => {
                     </div>
                     : ""}
                 </Box>
-            </Box>:
-            <LinearProgress/>
-            }
+            </Box>
         </Box>
     )
 }

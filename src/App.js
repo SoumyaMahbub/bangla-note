@@ -19,14 +19,18 @@ import {
 import McqQuiz from "./Components/McqQuiz";
 import McqQuizOptions from "./Components/McqQuizOptions";
 import { Toolbar } from "@mui/material";
+import { useState } from "react";
 
 
 function App() {
+	const [mobileOpen, setMobileOpen] = useState(false);
 	const darkTheme = createTheme({
 		palette: {
 			mode: 'dark',
 		}
 	})
+	const [authorsRefresher, setAuthorsRefresher] = useState(0);
+	const [authorRefresher, setAuthorRefresher] = useState(0);
     return (
 		<ThemeProvider theme={darkTheme}>
 		<LocalizationProvider dateAdapter={DateAdapter}>
@@ -34,19 +38,19 @@ function App() {
 		<div className="App">
 			<CssBaseline />
 			<Box sx={{ display: 'flex' }}>
-				<SideBar/>
+				<SideBar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen}/>
 				<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
-					<NavBar/>
+					<NavBar setMobileOpen={setMobileOpen}/>
 					<Toolbar/>
 					<Switch>
 						<Route key="edit-author" path="/authors/:id/edit">
-							<AuthorForm />	
+							<AuthorForm setAuthorRefresher={setAuthorRefresher}/>	
 						</Route>
 						<Route path="/authors/:id">
-							<Author />	
+							<Author authorRefresher={authorRefresher} setAuthorsRefresher={setAuthorsRefresher}/>	
 						</Route>
 						<Route path="/authors">
-							<Authors />
+							<Authors authorsRefresher={authorsRefresher}/>
 						</Route>
 						<Route path="/questions">
 							<Questions />
@@ -61,7 +65,7 @@ function App() {
 							<McqQuiz />
 						</Route>
 						<Route key="add-author" path="/add-author">
-							<AuthorForm />
+							<AuthorForm setAuthorsRefresher={setAuthorsRefresher}/>
 						</Route>
 					</Switch>
 				</Box>
