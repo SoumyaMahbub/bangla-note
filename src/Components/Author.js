@@ -61,7 +61,7 @@ const Author = (props) => {
                     <Button onClick={deleteAuthorHandler} variant="outlined" color="error" startIcon={<DeleteIcon />}>মুছে দিন</Button>
                 </Box>
             </Box>
-            <Box sx={{display: {sm:'flex'}}} mt="20px" container>
+            <Box sx={{display: {sm:'flex'}, alignItems: {sm:'start'}}} mt="20px" container>
                 <Card sx={{ maxWidth: {sm: '345px'}, mb:{xs:'20px'}, mx:{xs:'auto'}}}>
                     <CardContent>
                         <Typography gutterBottom variant="h5" component="div">

@@ -16,6 +16,7 @@ import {
 	Switch,
 	Route,
   } from "react-router-dom";
+import { Redirect } from 'react-router';
 import McqQuiz from "./Components/McqQuiz";
 import McqQuizOptions from "./Components/McqQuizOptions";
 import { Toolbar } from "@mui/material";
@@ -43,6 +44,9 @@ function App() {
 					<NavBar setMobileOpen={setMobileOpen}/>
 					<Toolbar/>
 					<Switch>
+						<Route path="/" exact>
+							<Redirect to="/authors"></Redirect>
+						</Route>
 						<Route key="edit-author" path="/authors/:id/edit">
 							<AuthorForm setAuthorRefresher={setAuthorRefresher}/>	
 						</Route>
